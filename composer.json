@@ -1,0 +1,40 @@
+{
+  "name": "dunglas/php-property-info",
+  "type": "library",
+  "description": "Retrieve type and description of PHP properties using various sources ",
+  "keywords": [
+    "property",
+    "type",
+    "PHPDoc",
+    "symfony",
+    "validator",
+    "doctrine"
+  ],
+  "homepage": "http://dunglas.fr",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kévin Dunglas",
+      "email": "dunglas@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "PropertyInfo": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "~2.1",
+    "doctrine/orm": "~2.3",
+    "symfony/validator": "~2.3",
+    "phpdocumentor/reflection": "~1.0"
+  },
+  "suggest": {
+    "doctrine/orm": "To use Doctrine metadata",
+    "symfony/validator": "To use Symfony validator metadata",
+    "phpdocumentor/reflection": "To use the PHPDoc"
+  }
+}
