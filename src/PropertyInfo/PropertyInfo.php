@@ -40,10 +40,6 @@ class PropertyInfo
         $this->reflectionProperty = $reflectionProperty;
         $this->typeExtractors = $typeExtractors;
         $this->descriptionExtractors = $descriptionExtractors;
-
-        foreach(($this->typeExtractors + $this->descriptionExtractors) as $extractor) {
-            $extractor->setRelfectionProperty($reflectionProperty);
-        }
     }
 
     /**
@@ -54,7 +50,7 @@ class PropertyInfo
     public function getShortDescription()
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractShortDescription();
+            $desc = $extractor->extractShortDescription($this->reflectionProperty);
             if (null !== $desc) {
                 return $desc;
             }
@@ -69,7 +65,7 @@ class PropertyInfo
     public function getLongDescription()
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractLongDescription();
+            $desc = $extractor->extractLongDescription($this->reflectionProperty);
             if (null !== $desc) {
                 return $desc;
             }
@@ -86,7 +82,7 @@ class PropertyInfo
     public function getType()
     {
         foreach ($this->typeExtractors as $extractor) {
-            $type = $extractor->extractType();
+            $type = $extractor->extractType($this->reflectionProperty);
             if (null !== $type) {
                 return $type;
             }

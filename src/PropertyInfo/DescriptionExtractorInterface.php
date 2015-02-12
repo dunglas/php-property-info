@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Extractors;
+namespace PropertyInfo;
 
 /**
  * Description Extractor Interface.
@@ -19,14 +19,18 @@ interface DescriptionExtractorInterface
     /**
      * Extracts the short description of the property.
      *
+     * @param \ReflectionProperty $reflectionProperty
+     *
      * @return string|null
      */
-    public function extractShortDescription();
+    public function extractShortDescription(\ReflectionProperty $reflectionProperty);
 
     /**
      * Extracts the long description of the property.
      *
+     * @param \ReflectionProperty $reflectionProperty
+     *
      * @return string|null
      */
-    public function extractLongDescription();
+    public function extractLongDescription(\ReflectionProperty $reflectionProperty);
 }

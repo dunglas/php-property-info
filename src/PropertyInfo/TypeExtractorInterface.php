@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Extractors;
+namespace PropertyInfo;
 
 use PropertyInfo\Type;
 
@@ -19,9 +19,11 @@ use PropertyInfo\Type;
 interface TypeExtractorInterface
 {
     /**
-     * Extracts the type;
+     * Extracts the type.
+     *
+     * @param \ReflectionProperty $reflectionProperty
      *
      * @return Type|null
      */
-    public function extractType();
+    public function extractType(\ReflectionProperty $reflectionProperty);
 }
