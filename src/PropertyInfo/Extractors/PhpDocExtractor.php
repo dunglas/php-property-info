@@ -90,7 +90,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
             }
         }
 
-        return $types;
+        return isset($types[0]) ? $types : null;
     }
 
     /**
@@ -213,6 +213,9 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
             case 'integer':
                 return 'int';
 
+            case 'boolean':
+                return 'bool';
+
             // real is not handle by the PHPDoc standard, so we ignore it
             case 'double':
                 return 'float';
@@ -243,6 +246,6 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
         }
 
         $type->setType('object');
-        $type->setClass($docType);
+        $type->setClass(substr($docType, 1));
     }
 }

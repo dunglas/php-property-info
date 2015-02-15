@@ -107,10 +107,10 @@ class PhpDocExtractorSpec extends ObjectBehavior
     public function it_cannot_guess()
     {
         $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo');
-        $this->extractTypes($reflectionProperty)->shouldReturn([]);
+        $this->extractTypes($reflectionProperty)->shouldBeNull();
 
         $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo5');
-        $this->extractTypes($reflectionProperty)->shouldReturn([]);
+        $this->extractTypes($reflectionProperty)->shouldBeNull();
     }
 
     public function it_extracts_fqn_class()
@@ -119,7 +119,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
         $type = $this->extractTypes($reflectionProperty)[0];
 
         $type->getType()->shouldReturn('object');
-        $type->getClass()->shouldReturn('\DateTime');
+        $type->getClass()->shouldReturn('DateTime');
         $type->isCollection()->shouldReturn(false);
         $type->getCollectionType()->shouldBeNull();
     }
@@ -130,7 +130,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
         $type = $this->extractTypes($reflectionProperty)[0];
 
         $type->getType()->shouldReturn('object');
-        $type->getClass()->shouldReturn('\\'.__NAMESPACE__.'\PhpDocParent');
+        $type->getClass()->shouldReturn(__NAMESPACE__.'\PhpDocParent');
         $type->isCollection()->shouldReturn(false);
         $type->getCollectionType()->shouldBeNull();
     }
@@ -146,7 +146,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $collectionType = $type->getCollectionType();
         $collectionType->getType()->shouldReturn('object');
-        $collectionType->getClass()->shouldReturn('\DateTime');
+        $collectionType->getClass()->shouldReturn('DateTime');
         $collectionType->isCollection()->shouldReturn(false);
     }
 
@@ -161,7 +161,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $collectionType = $type1->getCollectionType();
         $collectionType->getType()->shouldReturn('object');
-        $collectionType->getClass()->shouldReturn('\SplFileInfo');
+        $collectionType->getClass()->shouldReturn('SplFileInfo');
         $collectionType->isCollection()->shouldReturn(false);
 
         $type2->getType()->shouldReturn('resource');

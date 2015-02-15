@@ -9,7 +9,6 @@
 
 namespace PropertyInfo;
 
-
 /**
  * Type Extractor Interface.
  *

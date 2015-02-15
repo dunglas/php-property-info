@@ -18,20 +18,28 @@ class Type
 {
     /**
      * @var string
+     *
+     * @internal For performance purpose (serialization). Use {@see getType()} instead.
      */
-    private $type;
+    public $type;
     /**
      * @var string|null
+     *
+     * @internal For performance purpose (serialization). Use {@see getClass()} instead.
      */
-    private $class;
+    public $class;
     /**
      * @var boolean
+     *
+     * @internal For performance purpose (serialization). Use {@see isCollection()} instead.
      */
-    private $collection;
+    public $collection;
     /**
      * @var Type
+     *
+     * @internal For performance purpose (serialization). Use {@see getCollectionType()} instead.
      */
-    private $collectionType;
+    public $collectionType;
 
     /**
      * Gets type.
