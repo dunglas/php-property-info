@@ -149,6 +149,25 @@ class PhpDocExtractorSpec extends ObjectBehavior
         $collectionType->getClass()->shouldReturn('\DateTime');
         $collectionType->isCollection()->shouldReturn(false);
     }
+
+    public function it_extracts_several_types()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'files');
+        list($type1, $type2) = $this->extractTypes($reflectionProperty);
+
+        $type1->getType()->shouldReturn('array');
+        $type1->getClass()->shouldBeNull();
+        $type1->isCollection()->shouldReturn(true);
+
+        $collectionType = $type1->getCollectionType();
+        $collectionType->getType()->shouldReturn('object');
+        $collectionType->getClass()->shouldReturn('\SplFileInfo');
+        $collectionType->isCollection()->shouldReturn(false);
+
+        $type2->getType()->shouldReturn('resource');
+        $type2->getClass()->shouldBeNull();
+        $type2->isCollection()->shouldReturn(false);
+    }
 }
 
 class PhpDocParent
@@ -175,6 +194,10 @@ class PhpDocParent
      * @var mixed
      */
     public $foo5;
+    /**
+     * @var \SplFileInfo[]|resource
+     */
+    public $files;
 }
 
 class PhpDocDummy extends PhpDocParent
