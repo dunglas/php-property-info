@@ -9,7 +9,6 @@
 
 namespace PropertyInfo;
 
-use PropertyInfo\Type;
 
 /**
  * Type Extractor Interface.
@@ -25,5 +24,5 @@ interface TypeExtractorInterface
      *
      * @return Type|null
      */
-    public function extractType(\ReflectionProperty $reflectionProperty);
+    public function extractTypes(\ReflectionProperty $reflectionProperty);
 }

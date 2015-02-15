@@ -30,6 +30,20 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
      * @var DocBlock[]
      */
     private static $docBlocks = [];
+    /**
+     * @var array
+     */
+    private static $nativeTypes = [
+        'int' => true,
+        'bool' => true,
+        'float' => true,
+        'string' => true,
+        'array' => true,
+        'object' => true,
+        'null' => true,
+        'resource' => true,
+        'callable' => true,
+    ];
 
     public function extractShortDescription(\ReflectionProperty $reflectionProperty)
     {
@@ -37,7 +51,18 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
             return;
         }
 
-        return $docBlock->getShortDescription();
+        $shortDescription = $docBlock->getShortDescription();
+        if ($shortDescription) {
+            return $shortDescription;
+        }
+
+        foreach ($docBlock->getTagsByName('var') as $var) {
+            $parsedDescription = $var->getParsedDescription();
+
+            if (isset($parsedDescription[0])) {
+                return $parsedDescription[0];
+            }
+        }
     }
 
     public function extractLongDescription(\ReflectionProperty $reflectionProperty)
@@ -49,14 +74,23 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
         return $docBlock->getLongDescription()->getContents();
     }
 
-
-    public function extractType(\ReflectionProperty $reflectionProperty)
+    public function extractTypes(\ReflectionProperty $reflectionProperty)
     {
         if (!($docBlock = $this->getDocBlock($reflectionProperty))) {
             return;
         }
 
-        return $docBlock->getTagsByName('var');
+        $types = [];
+        foreach ($docBlock->getTagsByName('var') as $var) {
+            foreach ($var->getTypes() as $docType) {
+                $type = $this->createType($docType);
+                if (null !== $type) {
+                    $types[] = $type;
+                }
+            }
+        }
+
+        return $types;
     }
 
     /**
@@ -114,11 +148,101 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
                             return self::$docBlocks[$propertyHash] = $property->getDocBlock();
                         }
                     }
-
                 }
             }
         }
 
         return self::$docBlocks[$propertyHash] = null;
+    }
+
+    /**
+     * Creates a {@see Type} from a PHPDoc type.
+     *
+     * @param string $docType
+     *
+     * @return Type|null
+     */
+    private function createType($docType)
+    {
+        // Cannot guess
+        if (!$docType || 'mixed' === $docType) {
+            return;
+        }
+
+        if ($collection = '[]' === substr($docType, -2)) {
+            $docType = substr($docType, 0, -2);
+        }
+
+        $array = 'array' === $docType;
+
+        $type = new Type();
+        if ($collection || $array) {
+            $type->setCollection(true);
+            $type->setType('array');
+
+            if (!$array && 'mixed' !== $docType) {
+                $docType = $this->normalizeType($docType);
+
+                $collectionType = new Type();
+                $collectionType->setCollection(false);
+                $this->populateType($collectionType, $docType);
+
+                $type->setCollectionType($collectionType);
+            }
+
+            return $type;
+        }
+
+        $docType = $this->normalizeType($docType);
+        $type->setCollection(false);
+        $this->populateType($type, $docType);
+
+        return $type;
+    }
+
+    /**
+     * Normalizes the type.
+     *
+     * @param string $docType
+     *
+     * @return string
+     */
+    private function normalizeType($docType)
+    {
+        switch ($docType) {
+            case 'integer':
+                return 'int';
+
+            // real is not handle by the PHPDoc standard, so we ignore it
+            case 'double':
+                return 'float';
+
+            case 'callback':
+                return 'callable';
+
+            case 'void':
+                return 'null';
+
+            default:
+                return $docType;
+        }
+    }
+
+    /**
+     * Populates type.
+     *
+     * @param Type   $type
+     * @param string $docType
+     */
+    private function populateType(Type $type, $docType)
+    {
+        if (isset(self::$nativeTypes[$docType])) {
+            $type->setType($docType);
+
+            return;
+        }
+
+        $type->setType('object');
+        $type->setClass($docType);
     }
 }

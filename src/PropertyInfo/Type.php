@@ -36,7 +36,7 @@ class Type
     /**
      * Gets type.
      *
-     * Can be boolean, integer, float, string, array, object, resource, null or callback.
+     * Can be bool, int, float, string, array, object, resource, null or callback.
      *
      * @return string
      */
@@ -102,7 +102,7 @@ class Type
      *
      * Only applicable if is a collection.
      *
-     * @return Type
+     * @return Type|null
      */
     public function getCollectionType()
     {

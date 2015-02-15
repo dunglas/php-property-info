@@ -45,7 +45,7 @@ class PropertyInfo
     /**
      * Gets the short description of the property.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getShortDescription()
     {
@@ -60,7 +60,7 @@ class PropertyInfo
     /**
      * Gets the short description of the property.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getLongDescription()
     {
@@ -73,16 +73,14 @@ class PropertyInfo
     }
 
     /**
-     * Gets the type of the property.
+     * Gets types of the property.
      *
-     *
-     *
-     * @return string|null
+     * @return Type[]|null
      */
-    public function getType()
+    public function getTypes()
     {
         foreach ($this->typeExtractors as $extractor) {
-            $type = $extractor->extractType($this->reflectionProperty);
+            $type = $extractor->extractTypes($this->reflectionProperty);
             if (null !== $type) {
                 return $type;
             }

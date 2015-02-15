@@ -10,7 +10,6 @@
 namespace spec\PropertyInfo\Extractors;
 
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * PhpDocExtractor Spec.
@@ -19,21 +18,136 @@ use Prophecy\Argument;
  */
 class PhpDocExtractorSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('PropertyInfo\Extractors\PhpDocExtractor');
+        $this->shouldHaveType('PropertyInfo\DescriptionExtractorInterface');
+        $this->shouldHaveType('PropertyInfo\TypeExtractorInterface');
     }
 
-    function it_extracts_short_description()
+    public function it_extracts_short_description()
     {
-        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\\PhpDocDummy', 'foo');
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo');
         $this->extractShortDescription($reflectionProperty)->shouldReturn('Short description.');
     }
 
-    function it_extracts_long_description()
+    public function it_extracts_short_description_from_var()
     {
-        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\\PhpDocDummy', 'foo');
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'bar');
+        $this->extractShortDescription($reflectionProperty)->shouldReturn('This is bar.');
+    }
+
+    public function it_respects_short_description_priority()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'baz');
+        $this->extractShortDescription($reflectionProperty)->shouldReturn('Should be used.');
+    }
+
+    public function it_extracts_long_description()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo');
         $this->extractLongDescription($reflectionProperty)->shouldReturn('Long description.');
+    }
+
+    public function it_extracts_scalar_type()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'bar');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('string');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_normalizes_int()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'baz');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('int');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_normalizes_float()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo2');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('float');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_normalizes_callable()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo3');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('callable');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_normalizes_null()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo4');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('null');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_cannot_guess()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo');
+        $this->extractTypes($reflectionProperty)->shouldReturn([]);
+
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'foo5');
+        $this->extractTypes($reflectionProperty)->shouldReturn([]);
+    }
+
+    public function it_extracts_fqn_class()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'bal');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('object');
+        $type->getClass()->shouldReturn('\DateTime');
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_extracts_local_class()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'parent');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('object');
+        $type->getClass()->shouldReturn('\\'.__NAMESPACE__.'\PhpDocParent');
+        $type->isCollection()->shouldReturn(false);
+        $type->getCollectionType()->shouldBeNull();
+    }
+
+    public function it_extracts_collection()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\PhpDocDummy', 'collection');
+        $type = $this->extractTypes($reflectionProperty)[0];
+
+        $type->getType()->shouldReturn('array');
+        $type->getClass()->shouldBeNull();
+        $type->isCollection()->shouldReturn(true);
+
+        $collectionType = $type->getCollectionType();
+        $collectionType->getType()->shouldReturn('object');
+        $collectionType->getClass()->shouldReturn('\DateTime');
+        $collectionType->isCollection()->shouldReturn(false);
     }
 }
 
@@ -45,8 +159,46 @@ class PhpDocParent
      * Long description.
      */
     public $foo;
+    /**
+     * @var double
+     */
+    public $foo2;
+    /**
+     * @var callback
+     */
+    public $foo3;
+    /**
+     * @var void
+     */
+    public $foo4;
+    /**
+     * @var mixed
+     */
+    public $foo5;
 }
 
 class PhpDocDummy extends PhpDocParent
 {
+    /**
+     * @var string This is bar.
+     */
+    private $bar;
+    /**
+     * Should be used.
+     *
+     * @var integer Should be ignored.
+     */
+    protected $baz;
+    /**
+     * @var \DateTime
+     */
+    public $bal;
+    /**
+     * @var PhpDocParent
+     */
+    public $parent;
+    /**
+     * @var \DateTime[]
+     */
+    public $collection;
 }
