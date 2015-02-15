@@ -21,7 +21,7 @@ interface TypeExtractorInterface
      *
      * @param \ReflectionProperty $reflectionProperty
      *
-     * @return Type|null
+     * @return Type[]|null
      */
     public function extractTypes(\ReflectionProperty $reflectionProperty);
 }

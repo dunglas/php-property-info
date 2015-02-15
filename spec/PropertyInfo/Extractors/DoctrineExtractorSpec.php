@@ -131,6 +131,12 @@ class DoctrineExtractorSpec extends ObjectBehavior
         $collectionType->isCollection()->shouldReturn(false);
         $collectionType->getCollectionType()->shouldBeNull();
     }
+
+    public function it_cannot_guess()
+    {
+        $reflectionProperty = new \ReflectionProperty(__NAMESPACE__.'\DoctrineDummy', 'notMapped');
+        $this->extractTypes($reflectionProperty)->shouldBeNull();
+    }
 }
 
 /**
@@ -171,6 +177,7 @@ class DoctrineDummy
      * @Column(type="binary")
      */
     private $binary;
+    public $notMapped;
 }
 
 /**
