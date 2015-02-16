@@ -46,7 +46,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('int');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -57,7 +57,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('string');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -68,7 +68,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('bool');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -79,7 +79,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('resource');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -90,7 +90,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('object');
         $type->getClass()->shouldReturn('DateTime');
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -101,7 +101,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('array');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(true);
+        $type->shouldBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -112,7 +112,7 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('object');
         $type->getClass()->shouldReturn(__NAMESPACE__.'\DoctrineRelation');
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -123,12 +123,12 @@ class DoctrineExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('object');
         $type->getClass()->shouldReturn('Doctrine\Common\Collections\Collection');
-        $type->isCollection()->shouldReturn(true);
+        $type->shouldBeCollection();
 
         $collectionType = $type->getCollectionType();
         $collectionType->getType()->shouldReturn('object');
         $collectionType->getClass()->shouldReturn(__NAMESPACE__.'\DoctrineRelation');
-        $collectionType->isCollection()->shouldReturn(false);
+        $collectionType->shouldNotBeCollection();
         $collectionType->getCollectionType()->shouldBeNull();
     }
 

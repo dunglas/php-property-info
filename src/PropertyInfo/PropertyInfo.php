@@ -9,9 +9,6 @@
 
 namespace PropertyInfo;
 
-use PropertyInfo\Extractors\DescriptionExtractorInterface;
-use PropertyInfo\Extractors\TypeExtractorInterface;
-
 /**
  * Gets info about PHP class properties.
  *
@@ -19,10 +16,6 @@ use PropertyInfo\Extractors\TypeExtractorInterface;
  */
 class PropertyInfo
 {
-    /**
-     * @var \ReflectionProperty
-     */
-    private $reflectionProperty;
     /**
      * @var TypeExtractorInterface[]
      */
@@ -32,12 +25,14 @@ class PropertyInfo
      */
     private $descriptionExtractors;
 
+    /**
+     * @param TypeExtractorInterface[]        $typeExtractors
+     * @param DescriptionExtractorInterface[] $descriptionExtractors
+     */
     public function __construct(
-        \ReflectionProperty $reflectionProperty,
         array $typeExtractors,
         array $descriptionExtractors
     ) {
-        $this->reflectionProperty = $reflectionProperty;
         $this->typeExtractors = $typeExtractors;
         $this->descriptionExtractors = $descriptionExtractors;
     }
@@ -45,12 +40,14 @@ class PropertyInfo
     /**
      * Gets the short description of the property.
      *
+     * @param \ReflectionProperty $reflectionProperty
+     *
      * @return string|null
      */
-    public function getShortDescription()
+    public function getShortDescription(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractShortDescription($this->reflectionProperty);
+            $desc = $extractor->extractShortDescription($reflectionProperty);
             if (null !== $desc) {
                 return $desc;
             }
@@ -60,12 +57,14 @@ class PropertyInfo
     /**
      * Gets the short description of the property.
      *
+     * @param \ReflectionProperty $reflectionProperty
+     *
      * @return string|null
      */
-    public function getLongDescription()
+    public function getLongDescription(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractLongDescription($this->reflectionProperty);
+            $desc = $extractor->extractLongDescription($reflectionProperty);
             if (null !== $desc) {
                 return $desc;
             }
@@ -75,12 +74,14 @@ class PropertyInfo
     /**
      * Gets types of the property.
      *
+     * @param \ReflectionProperty $reflectionProperty
+     *
      * @return Type[]|null
      */
-    public function getTypes()
+    public function getTypes(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->typeExtractors as $extractor) {
-            $type = $extractor->extractTypes($this->reflectionProperty);
+            $type = $extractor->extractTypes($reflectionProperty);
             if (null !== $type) {
                 return $type;
             }

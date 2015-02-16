@@ -7,8 +7,8 @@ This library extracts various information including the type and documentation f
 popular sources:
 
 * Setter method with type hint
-* PHPDoc `@var` annotation
-* Doctrine ORM mapping (annotations, XML, YML and custom formats)
+* PHPDoc DocBlock
+* Doctrine ORM mapping (annotation, XML, YML or custom format)
 
 [![Build Status](https://travis-ci.org/dunglas/php-property-info.svg?branch=master)](https://travis-ci.org/dunglas/php-property-info)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5/mini.png)](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5)
@@ -16,4 +16,4 @@ popular sources:
 TODO
 ----
 
-* [ ] Symfony Validator Component (annotations, XML, YML and custom formats)
+* [ ] Symfony Validator Component support

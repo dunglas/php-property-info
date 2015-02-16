@@ -56,7 +56,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('string');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -67,7 +67,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('int');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -78,7 +78,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('float');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -89,7 +89,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('callable');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -100,7 +100,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('null');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -120,7 +120,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('object');
         $type->getClass()->shouldReturn('DateTime');
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -131,7 +131,7 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('object');
         $type->getClass()->shouldReturn(__NAMESPACE__.'\PhpDocParent');
-        $type->isCollection()->shouldReturn(false);
+        $type->shouldNotBeCollection();
         $type->getCollectionType()->shouldBeNull();
     }
 
@@ -142,12 +142,12 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type->getType()->shouldReturn('array');
         $type->getClass()->shouldBeNull();
-        $type->isCollection()->shouldReturn(true);
+        $type->shouldBeCollection();
 
         $collectionType = $type->getCollectionType();
         $collectionType->getType()->shouldReturn('object');
         $collectionType->getClass()->shouldReturn('DateTime');
-        $collectionType->isCollection()->shouldReturn(false);
+        $collectionType->shouldNotBeCollection();
     }
 
     public function it_extracts_several_types()
@@ -157,16 +157,16 @@ class PhpDocExtractorSpec extends ObjectBehavior
 
         $type1->getType()->shouldReturn('array');
         $type1->getClass()->shouldBeNull();
-        $type1->isCollection()->shouldReturn(true);
+        $type1->shouldBeCollection();
 
         $collectionType = $type1->getCollectionType();
         $collectionType->getType()->shouldReturn('object');
         $collectionType->getClass()->shouldReturn('SplFileInfo');
-        $collectionType->isCollection()->shouldReturn(false);
+        $collectionType->shouldNotBeCollection();
 
         $type2->getType()->shouldReturn('resource');
         $type2->getClass()->shouldBeNull();
-        $type2->isCollection()->shouldReturn(false);
+        $type2->shouldNotBeCollection();
     }
 }
 
