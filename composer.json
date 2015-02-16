@@ -29,7 +29,6 @@
   "require-dev": {
     "phpspec/phpspec": "~2.1",
     "doctrine/orm": "~2.3",
-    "symfony/validator": "~2.3",
     "phpdocumentor/reflection": "~1.0"
   },
   "suggest": {
