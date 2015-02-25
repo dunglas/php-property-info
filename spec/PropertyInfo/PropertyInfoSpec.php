@@ -44,6 +44,7 @@ class PropertyInfoSpec extends ObjectBehavior
     public function it_is_initializable()
     {
         $this->shouldHaveType('PropertyInfo\PropertyInfo');
+        $this->shouldHaveType('PropertyInfo\PropertyInfoInterface');
     }
 
     public function it_gets_types(\ReflectionProperty $property)

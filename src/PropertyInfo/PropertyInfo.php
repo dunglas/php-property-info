@@ -9,12 +9,7 @@
 
 namespace PropertyInfo;
 
-/**
- * Gets info about PHP class properties.
- *
- * @author Kévin Dunglas <dunglas@gmail.com>
- */
-class PropertyInfo
+class PropertyInfo implements PropertyInfoInterface
 {
     /**
      * @var TypeExtractorInterface[]
@@ -37,13 +32,6 @@ class PropertyInfo
         $this->descriptionExtractors = $descriptionExtractors;
     }
 
-    /**
-     * Gets the short description of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return string|null
-     */
     public function getShortDescription(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->descriptionExtractors as $extractor) {
@@ -54,13 +42,6 @@ class PropertyInfo
         }
     }
 
-    /**
-     * Gets the short description of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return string|null
-     */
     public function getLongDescription(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->descriptionExtractors as $extractor) {
@@ -71,13 +52,6 @@ class PropertyInfo
         }
     }
 
-    /**
-     * Gets types of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return Type[]|null
-     */
     public function getTypes(\ReflectionProperty $reflectionProperty)
     {
         foreach ($this->typeExtractors as $extractor) {
