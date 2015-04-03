@@ -125,7 +125,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
      */
     private function getDocBlock(\ReflectionProperty $reflectionProperty)
     {
-        $propertyHash = spl_object_hash($reflectionProperty);
+        $propertyHash = $reflectionProperty->class.'::'.$reflectionProperty->name;
 
         if (isset(self::$docBlocks[$propertyHash])) {
             return self::$docBlocks[$propertyHash];
