@@ -179,7 +179,7 @@ class PhpDocParent
      */
     public $foo;
     /**
-     * @var double
+     * @var float
      */
     public $foo2;
     /**
@@ -209,7 +209,7 @@ class PhpDocDummy extends PhpDocParent
     /**
      * Should be used.
      *
-     * @var integer Should be ignored.
+     * @var int Should be ignored.
      */
     protected $baz;
     /**

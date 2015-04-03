@@ -29,7 +29,7 @@ class Type
      */
     public $class;
     /**
-     * @var boolean
+     * @var bool
      *
      * @internal For performance purpose (serialization). Use {@see isCollection()} instead.
      */
@@ -88,7 +88,7 @@ class Type
     /**
      * Is collection?
      *
-     * @return boolean
+     * @return bool
      */
     public function isCollection()
     {
@@ -98,7 +98,7 @@ class Type
     /**
      * Sets collection.
      *
-     * @param boolean $collection
+     * @param bool $collection
      */
     public function setCollection($collection)
     {
