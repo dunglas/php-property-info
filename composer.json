@@ -19,8 +19,8 @@
     }
   ],
   "autoload": {
-    "psr-0": {
-      "PropertyInfo\\": "src/"
+    "psr-4": {
+      "PropertyInfo\\": "src/PropertyInfo"
     }
   },
   "require": {
