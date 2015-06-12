@@ -13,6 +13,8 @@ popular sources:
 [![Build Status](https://travis-ci.org/dunglas/php-property-info.svg?branch=master)](https://travis-ci.org/dunglas/php-property-info)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5/mini.png)](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5)
 
+PHP Property info is part of the [API Platform](http://api-platform.com) framework.
+
 ## Installation
 
 Use [Composer](http://getcomposer.org) to install the library:
