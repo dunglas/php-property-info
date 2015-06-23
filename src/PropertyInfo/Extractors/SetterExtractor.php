@@ -10,48 +10,23 @@
 namespace PropertyInfo\Extractors;
 
 use PropertyInfo\Type;
-use PropertyInfo\TypeExtractorInterface;
 
 /**
  * Setter Extractor.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class SetterExtractor implements TypeExtractorInterface
+class SetterExtractor extends NativeExtractor
 {
+    /**
+     * @param \ReflectionProperty $reflectionProperty
+     *
+     * @return array|Type[]|null
+     */
     public function extractTypes(\ReflectionProperty $reflectionProperty)
     {
-        $setterName = sprintf('set%s', ucfirst($reflectionProperty->getName()));
-        $reflectionClass = $reflectionProperty->getDeclaringClass();
+        $typeInfo = $this->typeInfoParser->getSetterParamType($reflectionProperty);
 
-        if ($reflectionClass->hasMethod($setterName)) {
-            $reflectionMethod = $reflectionClass->getMethod($setterName);
-            if (1 !== $reflectionMethod->getNumberOfRequiredParameters()) {
-                return;
-            }
-
-            foreach ($reflectionMethod->getParameters() as $reflectionParameter) {
-                if ($reflectionParameter->isOptional()) {
-                    continue;
-                }
-
-                $type = new Type();
-                if ($reflectionParameter->isArray()) {
-                    $type->setCollection(true);
-                    $type->setType('array');
-                } elseif ($reflectionParameter->isCallable()) {
-                    $type->setCollection(false);
-                    $type->setType('callable');
-                } elseif ($typeHint = $reflectionParameter->getClass()) {
-                    $type->setCollection(false);
-                    $type->setType('object');
-                    $type->setClass($typeHint->getName());
-                } else {
-                    return;
-                }
-
-                return [$type];
-            }
-        }
+        return $this->typeInfoParser->parse($typeInfo);
     }
 }
