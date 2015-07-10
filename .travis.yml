@@ -14,16 +14,18 @@ php:
   - hhvm
 
 matrix:
-    allow_failures:
-        - php: nightly
-        - php: hhvm-nightly
-    fast_finish: true
+  include:
+    - php: 5.4
+      env: COMPOSER_FLAGS="--prefer-lowest"
+  allow_failures:
+    - php: nightly
+    - php: hhvm-nightly
+  fast_finish: true
 
 before_script:
-    - composer self-update
-
-install:
-  - composer install --dev
+  - composer self-update
+  - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
+  - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
 
 script:
   - vendor/bin/phpspec run
