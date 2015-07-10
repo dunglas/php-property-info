@@ -37,6 +37,9 @@
     "doctrine/orm": "~2.3",
     "phpdocumentor/reflection": "~1.0"
   },
+  "conflict": {
+    "phpdocumentor/reflection": "<1.0.4"
+  },
   "suggest": {
     "doctrine/orm": "To use Doctrine metadata",
     "symfony/validator": "To use Symfony validator metadata",
