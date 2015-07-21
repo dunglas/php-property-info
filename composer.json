@@ -1,48 +1,48 @@
 {
-  "name": "dunglas/php-property-info",
-  "type": "library",
-  "description": "Retrieve type and description of PHP properties using various sources ",
-  "keywords": [
-    "property",
-    "type",
-    "PHPDoc",
-    "symfony",
-    "validator",
-    "doctrine"
-  ],
-  "homepage": "http://dunglas.fr",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Kévin Dunglas",
-      "email": "dunglas@gmail.com"
+    "name": "dunglas/php-property-info",
+    "type": "library",
+    "description": "Retrieve type and description of PHP properties using various sources ",
+    "keywords": [
+        "property",
+        "type",
+        "PHPDoc",
+        "symfony",
+        "validator",
+        "doctrine"
+    ],
+    "homepage": "http://dunglas.fr",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kévin Dunglas",
+            "email": "dunglas@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PropertyInfo\\": "src/PropertyInfo"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PropertyInfo\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "~2.1",
+        "phpunit/phpunit": "~4.5",
+        "doctrine/orm": "~2.3",
+        "phpdocumentor/reflection": "~1.0"
+    },
+    "conflict": {
+        "phpdocumentor/reflection": "<1.0.4"
+    },
+    "suggest": {
+        "doctrine/orm": "To use Doctrine metadata",
+        "symfony/validator": "To use Symfony validator metadata",
+        "phpdocumentor/reflection": "To use the PHPDoc"
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "PropertyInfo\\": "src/PropertyInfo"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "PropertyInfo\\Tests\\": "tests"
-    }
-  },
-  "require": {
-    "php": ">=5.4"
-  },
-  "require-dev": {
-    "phpspec/phpspec": "~2.1",
-    "phpunit/phpunit": "~4.5",
-    "doctrine/orm": "~2.3",
-    "phpdocumentor/reflection": "~1.0"
-  },
-  "conflict": {
-    "phpdocumentor/reflection": "<1.0.4"
-  },
-  "suggest": {
-    "doctrine/orm": "To use Doctrine metadata",
-    "symfony/validator": "To use Symfony validator metadata",
-    "phpdocumentor/reflection": "To use the PHPDoc"
-  }
 }
