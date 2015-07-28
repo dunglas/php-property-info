@@ -23,11 +23,17 @@
       "PropertyInfo\\": "src/PropertyInfo"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "PropertyInfo\\Tests\\": "tests"
+    }
+  },
   "require": {
     "php": ">=5.4"
   },
   "require-dev": {
     "phpspec/phpspec": "~2.1",
+    "phpunit/phpunit": "~4.5",
     "doctrine/orm": "~2.3",
     "phpdocumentor/reflection": "~1.0"
   },

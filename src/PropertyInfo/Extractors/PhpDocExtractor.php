@@ -102,7 +102,8 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
      */
     private function getFileReflector(\ReflectionClass $reflectionClass)
     {
-        if (!($fileName = $reflectionClass->getFileName())) {
+        if (!($fileName = $reflectionClass->getFileName())
+        || in_array(pathinfo($fileName, PATHINFO_EXTENSION), ['php7', 'hh'])) {
             return;
         }
 
