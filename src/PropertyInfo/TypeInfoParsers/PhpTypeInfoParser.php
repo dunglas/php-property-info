@@ -41,7 +41,7 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
     {
         $getter = $this->getGetter($property);
 
-        if (PHP_VERSION >= 7 && $getter !== null && $getter->hasReturnType()) {
+        if (PHP_VERSION >= 7 && null !== $getter && $getter->hasReturnType()) {
             return (string) $getter->getReturnType();
         }
     }
@@ -54,14 +54,21 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
     public function getSetterParamType(\ReflectionProperty $property)
     {
         $param = $this->getSetterParam($property);
+
         if (null !== $param) {
             if (PHP_VERSION >= 7) {
                 return (string) $param->getType();
-            } elseif ($param->isArray()) {
+            }
+
+            if ($param->isArray()) {
                 return 'array';
-            } elseif ($param->isCallable()) {
+            }
+
+            if ($param->isCallable()) {
                 return 'callable';
-            } elseif ($class = $param->getClass()) {
+            }
+
+            if ($class = $param->getClass()) {
                 return $class->getName();
             }
         }
@@ -76,24 +83,31 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
     {
         $type = new Type();
 
-        $collection = false;
-        $class = null;
+        if ('double' === $info) {
+            $type->setType('float');
 
-        if ($info === null) {
-            return;
-        } elseif ($info === 'double') {
-            $info = 'float';
-        } elseif ($info === 'array') {
-            $collection = true;
-        } elseif (class_exists($info)) {
-            $class = $info;
-            $info = 'object';
+            return [$type];
         }
 
-        $type->setCollection($collection);
-        $type->setType($info);
-        $type->setClass($class);
+        if ('array' === $info) {
+            $type->setType('array');
+            $type->setCollection(true);
 
-        return [$type];
+            return [$type];
+        }
+
+        if (class_exists($info)) {
+            $type->setType('object');
+            $type->setClass($info);
+            $type->setCollection(true);
+
+            return [$type];
+        }
+
+        if (null !== $info) {
+            $type->setType($info);
+
+            return [$type];
+        }
     }
 }
