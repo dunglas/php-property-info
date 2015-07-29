@@ -9,6 +9,8 @@ popular sources:
 * Setter method with type hint
 * PHPDoc DocBlock
 * Doctrine ORM mapping (annotation, XML, YML or custom format)
+* PHP 7 scalar typehint and return type
+* Hack (hacklang) types
 
 [![Build Status](https://travis-ci.org/dunglas/php-property-info.svg?branch=master)](https://travis-ci.org/dunglas/php-property-info)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5/mini.png)](https://insight.sensiolabs.com/projects/29b845cf-106d-45b4-99af-271f2dc3f7d5)
