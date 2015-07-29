@@ -9,8 +9,8 @@
 
 namespace PropertyInfo\Tests\NativeExtractors\DataProviders;
 
-use PropertyInfo\Extractors\SetterExtractor;
 use PropertyInfo\Extractors\GetterExtractor;
+use PropertyInfo\Extractors\SetterExtractor;
 use PropertyInfo\Tests\NativeExtractors\Data\Php7Data;
 
 /**

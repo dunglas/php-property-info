@@ -9,9 +9,6 @@
 
 namespace PropertyInfo\Tests\NativeExtractors\DataProviders;
 
-use PropertyInfo\Extractors\SetterExtractor;
-use PropertyInfo\Tests\NativeExtractors\Data\Php5Data;
-
 /**
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
@@ -32,7 +29,7 @@ class Php5DataProvider
             [
                 'PropertyInfo\Tests\NativeExtractors\Data\Php5Data',
                 'PropertyInfo\Extractors\SetterExtractor',
-                $properties
+                $properties,
             ],
         ];
 

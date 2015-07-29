@@ -21,7 +21,7 @@ use PropertyInfo\TypeInfoParsers\PhpTypeInfoParser;
 abstract class NativeExtractor implements TypeExtractorInterface
 {
     /**
-     * @var  PhpTypeInfoParser|HhvmTypeInfoParser
+     * @var PhpTypeInfoParser|HhvmTypeInfoParser
      */
     protected $typeInfoParser;
 
