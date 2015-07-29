@@ -52,9 +52,11 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
      */
     public function getGetterReturnType(\ReflectionProperty $property)
     {
-        $method = $this->getGetter($property);
+        $getter = $this->getGetter($property);
 
-        return $method->getReturnTypeText();
+        if (null !== $getter) {
+            return $getter->getReturnTypeText();
+        }
     }
 
     /**
@@ -98,18 +100,20 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
         if (isset(static::$types[$info])) {
             $type->setType(static::$types[$info]);
             $type->setCollection('array' === $info);
-        } elseif (class_exists($info, true)) {
+
+            return $type;
+        }
+
+        if (class_exists($info, true)) {
             $class = new \ReflectionClass($info);
             $collection = $class->implementsInterface('HH\\Collection');
 
             $type->setType('object');
             $type->setClass($info);
             $type->setCollection($collection);
-        } else {
-            $type = null;
-        }
 
-        return $type;
+            return $type;
+        }
     }
 
     /**
@@ -119,8 +123,6 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
      */
     protected function parseContainerTypes($info)
     {
-        $type = new Type();
-
         if (false !== ($pos = strpos($info, '<'))) {
             $container = substr($info, 0, $pos);
             $contents = substr($info, $pos + 1, -1);
@@ -134,7 +136,11 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
                 $type->setCollectionType(new Type());
                 $type->getCollectionType()->setType('array');
                 $type->getCollectionType()->setCollection(false);
-            } elseif (class_exists($container, true)) {
+
+                return $type;
+            }
+
+            if (class_exists($container, true)) {
                 $types = $this->parse(end($contents));
                 $type = reset($types);
                 $collectionTypes = $this->parse($container);
@@ -146,11 +152,9 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
                 } else {
                     $type->setCollectionType(null);
                 }
-            }
-        } else {
-            $type = null;
-        }
 
-        return $type;
+                return $type;
+            }
+        }
     }
 }

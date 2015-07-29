@@ -22,7 +22,7 @@ class HackData
     private int $int = 0;
     private float $float = 0.0;
     private string $string = '';
-    private array $array = array();
+    private array $array = [];
     private \stdClass $object;
 
     private ?bool $boolNullable;
@@ -32,19 +32,19 @@ class HackData
     private ?array $arrayNullable;
     private ?\stdClass $objectNullable;
 
-    private array<bool> $boolArray = array();
-    private array<int> $intArray = array();
-    private array<float> $floatArray = array();
-    private array<string> $stringArray = array();
-    private array<array> $arrayArray = array();
-    private array<\stdClass> $objectArray = array();
+    private array<bool> $boolArray = [];
+    private array<int> $intArray = [];
+    private array<float> $floatArray = [];
+    private array<string> $stringArray = [];
+    private array<array> $arrayArray = [];
+    private array<\stdClass> $objectArray = [];
 
-    private array<int, bool> $boolArrayInt = array();
-    private array<int, int> $intArrayInt = array();
-    private array<int, float> $floatArrayInt = array();
-    private array<int, string> $stringArrayInt = array();
-    private array<int, array> $arrayArrayInt = array();
-    private array<int, \stdClass> $objectArrayInt = array();
+    private array<int, bool> $boolArrayInt = [];
+    private array<int, int> $intArrayInt = [];
+    private array<int, float> $floatArrayInt = [];
+    private array<int, string> $stringArrayInt = [];
+    private array<int, array> $arrayArrayInt = [];
+    private array<int, \stdClass> $objectArrayInt = [];
 
     private ?Vector<bool> $boolVector;
     private ?Vector<int> $intVector;
