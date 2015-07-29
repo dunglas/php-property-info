@@ -60,7 +60,7 @@ abstract class NativeTypeInfoParser implements TypeInfoParserInterface
     public function getSetterParam(\ReflectionProperty $property)
     {
         $setter = $this->getSetter($property);
-        if (null === $setter or 1 !== $setter->getNumberOfRequiredParameters()) {
+        if (null === $setter || 1 !== $setter->getNumberOfRequiredParameters()) {
             return null;
         }
 
