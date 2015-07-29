@@ -29,7 +29,7 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
      */
     public function getPropertyType(\ReflectionProperty $property)
     {
-        return null;
+        return;
     }
 
     /**
@@ -67,7 +67,6 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
         }
     }
 
-
     /**
      * @param string $info
      *
@@ -81,7 +80,7 @@ class PhpTypeInfoParser extends NativeTypeInfoParser
         $class = null;
 
         if ($info === null) {
-            return null;
+            return;
         } elseif ($info === 'double') {
             $info = 'float';
         } elseif ($info === 'array') {

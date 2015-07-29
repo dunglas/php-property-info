@@ -25,7 +25,7 @@ use PropertyInfo\Type;
  */
 class HhvmTypeInfoParser extends NativeTypeInfoParser
 {
-    protected static $types = array(
+    protected static $types = [
         'HH\\bool' => 'bool',
         'HH\\int' => 'int',
         'HH\\float' => 'float',
@@ -33,7 +33,7 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
         'HH\\string' => 'string',
         'callable' => 'callable',
         'array' => 'array',
-    );
+    ];
 
     /**
      * @param \ReflectionProperty $property
@@ -123,7 +123,7 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
 
         if (false !== ($pos = strpos($info, '<'))) {
             $container = substr($info, 0, $pos);
-            $contents = substr($info, $pos+1, -1);
+            $contents = substr($info, $pos + 1, -1);
             $contents = explode(', ', $contents);
 
             if ('array' === $container) {

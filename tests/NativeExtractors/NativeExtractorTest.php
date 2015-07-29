@@ -62,7 +62,7 @@ class NativeExtractorTest extends \PHPUnit_Framework_TestCase
                 $this->fail(
                     vsprintf(
                         'Using "%1$s" type "%2$s" resulted in an empty type list',
-                        array(get_class($extractor), $expectedType)
+                        [get_class($extractor), $expectedType]
                     )
                 );
             }

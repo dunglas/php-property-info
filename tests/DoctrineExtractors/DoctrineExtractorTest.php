@@ -11,9 +11,7 @@ namespace PropertyInfo\Tests\DoctrineExtractors;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use PropertyInfo\Extractors\DoctrineExtractor;
 use PropertyInfo\PropertyInfo;
-use PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineDummy;
 use PropertyInfo\Type;
 use PropertyInfo\TypeExtractorInterface;
 
@@ -24,41 +22,41 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function extractorsDataProvider()
     {
-        $properties = array(
-            array(
-                'name'       => 'id',
-                'type'       => 'int',
+        $properties = [
+            [
+                'name' => 'id',
+                'type' => 'int',
                 'collection' => false,
-                'class'      => null,
-            ),
-            array(
-                'name'       => 'guid',
-                'type'       => 'string',
+                'class' => null,
+            ],
+            [
+                'name' => 'guid',
+                'type' => 'string',
                 'collection' => false,
-                'class'      => null,
-            ),
-            array(
-                'name'       => 'bool',
-                'type'       => 'bool',
+                'class' => null,
+            ],
+            [
+                'name' => 'bool',
+                'type' => 'bool',
                 'collection' => false,
-                'class'      => null,
-            ),
-            array('name' => 'binary', 'type' => 'resource', 'collection' => false, 'class' => null),
-            array('name' => 'json', 'type' => 'array', 'collection' => true, 'class' => null),
-            array('name' => 'foo', 'type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'),
-            array(
-                'name'           => 'bar',
-                'type'           => 'object',
-                'collection'     => true,
-                'class'          => 'Doctrine\Common\Collections\Collection',
-                'collectionType' => array('type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'),
-            ),
-            array('name' => 'notMapped', 'type' => null, 'collection' => false, 'class' => null),
-    );
+                'class' => null,
+            ],
+            ['name' => 'binary', 'type' => 'resource', 'collection' => false, 'class' => null],
+            ['name' => 'json', 'type' => 'array', 'collection' => true, 'class' => null],
+            ['name' => 'foo', 'type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'],
+            [
+                'name' => 'bar',
+                'type' => 'object',
+                'collection' => true,
+                'class' => 'Doctrine\Common\Collections\Collection',
+                'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'],
+            ],
+            ['name' => 'notMapped', 'type' => null, 'collection' => false, 'class' => null],
+    ];
 
-        $cases = array(
-            array('PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineDummy', 'PropertyInfo\Extractors\DoctrineExtractor', $properties),
-        );
+        $cases = [
+            ['PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineDummy', 'PropertyInfo\Extractors\DoctrineExtractor', $properties],
+        ];
 
         return $cases;
     }

@@ -23,25 +23,25 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
     {
         $properties = [
             [
-                'name'              => 'foo',
-                'type'              => null,
-                'collection'        => false,
-                'class'             => null,
+                'name' => 'foo',
+                'type' => null,
+                'collection' => false,
+                'class' => null,
                 'short_description' => 'Short description.',
-                'long_description'  => 'Long description.',
+                'long_description' => 'Long description.',
             ],
             [
-                'name'              => 'bar',
-                'type'              => 'string',
-                'collection'        => false,
-                'class'             => null,
+                'name' => 'bar',
+                'type' => 'string',
+                'collection' => false,
+                'class' => null,
                 'short_description' => 'This is bar.',
             ],
             [
-                'name'              => 'baz',
-                'type'              => 'int',
-                'collection'        => false,
-                'class'             => null,
+                'name' => 'baz',
+                'type' => 'int',
+                'collection' => false,
+                'class' => null,
                 'short_description' => 'Should be used.',
             ],
             ['name' => 'foo2', 'type' => 'float', 'collection' => false, 'class' => null],
@@ -49,24 +49,24 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
             ['name' => 'foo4', 'type' => 'null', 'collection' => false, 'class' => null],
             ['name' => 'foo5', 'type' => null, 'collection' => false, 'class' => null],
             [
-                'name'           => 'files',
-                'type'           => 'array',
-                'collection'     => true,
-                'class'          => null,
+                'name' => 'files',
+                'type' => 'array',
+                'collection' => true,
+                'class' => null,
                 'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'SplFileInfo'],
             ],
             ['name' => 'bal', 'type' => 'object', 'collection' => false, 'class' => 'DateTime'],
             [
-                'name'       => 'parent',
-                'type'       => 'object',
+                'name' => 'parent',
+                'type' => 'object',
                 'collection' => false,
-                'class'      => 'PropertyInfo\Tests\PhpDocExtractors\Data\PhpDocParent',
+                'class' => 'PropertyInfo\Tests\PhpDocExtractors\Data\PhpDocParent',
             ],
             [
-                'name'           => 'collection',
-                'type'           => 'array',
-                'collection'     => true,
-                'class'          => null,
+                'name' => 'collection',
+                'type' => 'array',
+                'collection' => true,
+                'class' => null,
                 'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'DateTime'],
             ],
         ];
@@ -102,7 +102,6 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
             /** @var Type[] $actualTypes */
             $actualTypes = $propertyInfo->getTypes($reflectionProperty);
             $actualType = $actualTypes[0];
-
 
             if (isset($property['short_description'])) {
                 $this->assertEquals(
