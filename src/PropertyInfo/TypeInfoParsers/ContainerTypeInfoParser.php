@@ -38,7 +38,6 @@ trait ContainerTypeInfoParser
         }
     }
 
-
     /**
      * @param string $info
      *

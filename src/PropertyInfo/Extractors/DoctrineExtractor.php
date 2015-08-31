@@ -31,7 +31,6 @@ class DoctrineExtractor implements TypeExtractorInterface
         $this->typeInfoParser = new DoctrineTypeInfoParser($classMetadataFactory);
     }
 
-
     /**
      * @param \ReflectionProperty $property
      *

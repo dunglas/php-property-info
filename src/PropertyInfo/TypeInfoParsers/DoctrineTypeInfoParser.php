@@ -49,12 +49,10 @@ class DoctrineTypeInfoParser implements TypeInfoParserInterface
      */
     private $classMetadataFactory;
 
-
     public function __construct(ClassMetadataFactory $classMetadataFactory)
     {
         $this->classMetadataFactory = $classMetadataFactory;
     }
-
 
     /**
      * @param \ReflectionProperty $property

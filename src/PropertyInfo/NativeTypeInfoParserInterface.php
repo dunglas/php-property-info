@@ -21,7 +21,6 @@ namespace PropertyInfo;
  */
 interface NativeTypeInfoParserInterface
 {
-
     /**
      * @param \ReflectionProperty $property
      *

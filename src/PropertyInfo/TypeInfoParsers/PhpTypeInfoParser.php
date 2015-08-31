@@ -9,8 +9,8 @@
 
 namespace PropertyInfo\TypeInfoParsers;
 
-use PropertyInfo\Type;
 use PropertyInfo\NativeTypeInfoParserInterface;
+use PropertyInfo\Type;
 
 /**
  *     This class will extract type information available to PHP from Properties, Getters and Setter parameters and it
