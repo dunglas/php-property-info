@@ -10,6 +10,7 @@
 namespace PropertyInfo\TypeInfoParsers;
 
 use PropertyInfo\Type;
+use PropertyInfo\NativeTypeInfoParserInterface;
 
 /**
  *     This class will extract type information available to PHP from Properties, Getters and Setter parameters and it
@@ -20,8 +21,13 @@ use PropertyInfo\Type;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-class PhpTypeInfoParser extends NativeTypeInfoParser
+class PhpTypeInfoParser implements NativeTypeInfoParserInterface
 {
+    use NativeTypeInfoParser;
+
+    const GETTER_FORMAT = 'get%s';
+    const SETTER_FORMAT = 'set%s';
+
     /**
      * @param \ReflectionProperty $property
      *

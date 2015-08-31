@@ -9,7 +9,7 @@
 
 namespace PropertyInfo\TypeInfoParsers;
 
-use PropertyInfo\Type;
+use PropertyInfo\NativeTypeInfoParserInterface;
 
 /**
  *     This class will extract type information available to HHVM from Properties, Getters and Setter parameters and it
@@ -23,8 +23,16 @@ use PropertyInfo\Type;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-class HhvmTypeInfoParser extends NativeTypeInfoParser
+class HhvmTypeInfoParser implements NativeTypeInfoParserInterface
 {
+    use NativeTypeInfoParser;
+    use ContainerTypeInfoParser;
+
+    const GETTER_FORMAT = 'get%s';
+    const SETTER_FORMAT = 'set%s';
+
+    const COLLECTION_INTERFACE = 'HH\\Collection';
+
     protected static $types = [
         'HH\\bool' => 'bool',
         'HH\\int' => 'int',
@@ -69,92 +77,6 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
         $param = $this->getSetterParam($property);
         if (null !== $param) {
             return $param->getTypeText();
-        }
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return array|Type[]
-     */
-    public function parse($info)
-    {
-        if ('?' === $info[0]) {
-            $info = substr($info, 1);
-        }
-
-        if (($type = $this->parseSimpleTypes($info)) || ($type = $this->parseContainerTypes($info))) {
-            return [$type];
-        }
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return Type|null
-     */
-    public function parseSimpleTypes($info)
-    {
-        $type = new Type();
-
-        if (isset(static::$types[$info])) {
-            $type->setType(static::$types[$info]);
-            $type->setCollection('array' === $info);
-
-            return $type;
-        }
-
-        if (class_exists($info, true)) {
-            $class = new \ReflectionClass($info);
-            $collection = $class->implementsInterface('HH\\Collection');
-
-            $type->setType('object');
-            $type->setClass($info);
-            $type->setCollection($collection);
-
-            return $type;
-        }
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return Type|null
-     */
-    protected function parseContainerTypes($info)
-    {
-        if (false !== ($pos = strpos($info, '<'))) {
-            $container = substr($info, 0, $pos);
-            $contents = substr($info, $pos + 1, -1);
-            $contents = explode(', ', $contents);
-
-            if ('array' === $container) {
-                $types = $this->parse(end($contents));
-                $type = reset($types);
-                $type->setCollection(true);
-
-                $type->setCollectionType(new Type());
-                $type->getCollectionType()->setType('array');
-                $type->getCollectionType()->setCollection(false);
-
-                return $type;
-            }
-
-            if (class_exists($container, true)) {
-                $types = $this->parse(end($contents));
-                $type = reset($types);
-                $collectionTypes = $this->parse($container);
-                $type->setCollectionType(reset($collectionTypes));
-
-                if ($type->getCollectionType()->isCollection()) {
-                    $type->setCollection(true);
-                    $type->getCollectionType()->setCollection(false);
-                } else {
-                    $type->setCollectionType(null);
-                }
-
-                return $type;
-            }
         }
     }
 }

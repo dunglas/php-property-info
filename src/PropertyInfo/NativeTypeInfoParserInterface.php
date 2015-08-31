@@ -10,8 +10,8 @@
 namespace PropertyInfo;
 
 /**
- *     Type info parser interface. Implementing classes of this interface should be able to retrieve information about a
- * property based on the given \ReflectionProperty.
+ *     Native type info parser interface. Implementing classes of this interface should be able to retrieve information
+ * about a property based on the given \ReflectionProperty.
  *
  *     The information returned should be a string representation of the type information.
  *
@@ -19,19 +19,20 @@ namespace PropertyInfo;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-interface TypeInfoParserInterface
+interface NativeTypeInfoParserInterface
 {
+
     /**
      * @param \ReflectionProperty $property
      *
      * @return string|null
      */
-    public function getPropertyType(\ReflectionProperty $property);
+    public function getGetterReturnType(\ReflectionProperty $property);
 
     /**
-     * @param string $info
+     * @param \ReflectionProperty $property
      *
-     * @return array|Type[]
+     * @return string|null
      */
-    public function parse($info);
+    public function getSetterParamType(\ReflectionProperty $property);
 }

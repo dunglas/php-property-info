@@ -40,14 +40,29 @@ class HackDataProvider
         }
         foreach ($properties as $property) {
             $property['name'] = $property['name'] . 'Array';
+            $property['collection'] = true;
+            $property['collectionType']['type'] = $property['type'];
+            $property['collectionType']['class'] = $property['class'];
+            $property['type'] = 'array';
+            $property['class'] = null;
             $extra[] = $property;
         }
         foreach ($properties as $property) {
             $property['name'] = $property['name'] . 'ArrayInt';
+            $property['collection'] = true;
+            $property['collectionType']['type'] = $property['type'];
+            $property['collectionType']['class'] = $property['class'];
+            $property['type'] = 'array';
+            $property['class'] = null;
             $extra[] = $property;
         }
         foreach ($properties as $property) {
             $property['name'] = $property['name'] . 'Vector';
+            $property['collection'] = true;
+            $property['collectionType']['type'] = $property['type'];
+            $property['collectionType']['class'] = $property['class'];
+            $property['class'] = 'HH\\Vector';
+            $property['type'] = 'object';
             $extra[] = $property;
         }
         $properties = $extra;
