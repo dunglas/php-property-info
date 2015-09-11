@@ -12,11 +12,11 @@ namespace PropertyInfo\TypeInfoParsers;
 use PropertyInfo\Type;
 
 /**
- *     This trait will will parse strings representing a composite type such as ArrayCollection<EntityObject>
- * and return Type[] objects.
+ * This trait will will parse strings representing a composite type such as ArrayCollection<EntityObject> and
+ * return Type[] objects.
  *
- *     Known limitation: when parsing type information we can correctly identify array<int, string> or Vector<stdClass>
- * but we do not (currently) parse recursively in depth so we cannot correctly identify array<int, array<string>>.
+ * Known limitation: when parsing type information we can correctly identify array<int, string> or Vector<stdClass> but
+ * we do not (currently) parse recursively in depth so we cannot correctly identify array<int, array<string>>.
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */

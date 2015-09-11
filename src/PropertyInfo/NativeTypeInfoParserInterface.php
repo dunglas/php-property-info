@@ -10,12 +10,12 @@
 namespace PropertyInfo;
 
 /**
- *     Native type info parser interface. Implementing classes of this interface should be able to retrieve information
+ * Native type info parser interface. Implementing classes of this interface should be able to retrieve information
  * about a property based on the given \ReflectionProperty.
  *
- *     The information returned should be a string representation of the type information.
+ * The information returned should be a string representation of the type information.
  *
- *     Implementing classes should also be able to parse this string and return Type[] objects based on the it.
+ * Implementing classes should also be able to parse this string and return Type[] objects based on the it.
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */

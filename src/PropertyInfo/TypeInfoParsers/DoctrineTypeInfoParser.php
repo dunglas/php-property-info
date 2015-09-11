@@ -11,11 +11,10 @@ namespace PropertyInfo\TypeInfoParsers;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use PropertyInfo\Type;
 use PropertyInfo\TypeInfoParserInterface;
 
 /**
- *     This class will extract type information available to Doctrine from the Metadata.
+ * This class will extract type information available to Doctrine from the Metadata.
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */

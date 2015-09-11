@@ -34,7 +34,7 @@ class DoctrineExtractor implements TypeExtractorInterface
     /**
      * @param \ReflectionProperty $property
      *
-     * @return array|Type[]
+     * @return Type[]
      */
     public function extractTypes(\ReflectionProperty $property)
     {
