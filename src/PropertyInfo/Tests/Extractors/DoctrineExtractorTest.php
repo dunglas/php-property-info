@@ -42,22 +42,22 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 
     public function typesProvider()
     {
-        return [
-            ['id', [new Type(Type::BUILTIN_TYPE_INT)]],
-            ['guid', [new Type(Type::BUILTIN_TYPE_STRING)]],
-            ['bool', [new Type(Type::BUILTIN_TYPE_BOOL)]],
-            ['binary', [new Type(Type::BUILTIN_TYPE_RESOURCE)]],
-            ['json', [new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true)]],
-            ['foo', [new Type(Type::BUILTIN_TYPE_OBJECT, false, 'PropertyInfo\Tests\Fixtures\DoctrineRelation')]],
-            ['bar', [new Type(
+        return array(
+            array('id', array(new Type(Type::BUILTIN_TYPE_INT))),
+            array('guid', array(new Type(Type::BUILTIN_TYPE_STRING))),
+            array('bool', array(new Type(Type::BUILTIN_TYPE_BOOL))),
+            array('binary', array(new Type(Type::BUILTIN_TYPE_RESOURCE))),
+            array('json', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true))),
+            array('foo', array(new Type(Type::BUILTIN_TYPE_OBJECT, false, 'PropertyInfo\Tests\Fixtures\DoctrineRelation'))),
+            array('bar', array(new Type(
                 Type::BUILTIN_TYPE_OBJECT,
                 false,
                 'Doctrine\Common\Collections\Collection',
                 true,
                 new Type(Type::BUILTIN_TYPE_INT),
                 new Type(Type::BUILTIN_TYPE_OBJECT, false, 'PropertyInfo\Tests\Fixtures\DoctrineRelation')
-            )]],
-            ['notMapped', null],
-        ];
+            ))),
+            array('notMapped', null),
+        );
     }
 }
