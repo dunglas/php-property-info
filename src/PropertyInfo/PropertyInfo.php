@@ -17,7 +17,7 @@ namespace PropertyInfo;
 class PropertyInfo implements PropertyInfoInterface
 {
     /**
-     * @var TypeExtractorInterface[]
+     * @var PropertyTypeInfoInterface[]
      */
     private $typeExtractors;
     /**
@@ -69,7 +69,7 @@ class PropertyInfo implements PropertyInfoInterface
     public function getTypes($class, $property)
     {
         foreach ($this->typeExtractors as $extractor) {
-            $type = $extractor->extractTypes($class, $property);
+            $type = $extractor->getTypes($class, $property);
             if (null !== $type) {
                 return $type;
             }
