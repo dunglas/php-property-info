@@ -163,7 +163,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
             try {
                 $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
 
-                if (0 !== $reflectionMethod->getNumberOfRequiredParameters()) {
+                if (0 === $reflectionMethod->getNumberOfRequiredParameters()) {
                     break;
                 }
             } catch (\ReflectionException $reflectionException) {
