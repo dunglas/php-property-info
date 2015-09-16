@@ -12,16 +12,16 @@ namespace PropertyInfo\Extractors;
 use phpDocumentor\Reflection\ClassReflector;
 use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\FileReflector;
-use PropertyInfo\DescriptionExtractorInterface;
+use PropertyInfo\PropertyDescriptionInfoInterface;
+use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
-use PropertyInfo\TypeExtractorInterface;
 
 /**
  * Extracts data using a PHPDoc parser.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInterface
+class PhpDocExtractor implements PropertyDescriptionInfoInterface, PropertyTypeInfoInterface
 {
     const PROPERTY = 0;
     const ACCESSOR = 1;
@@ -39,7 +39,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
     /**
      * {@inheritdoc}
      */
-    public function extractShortDescription($class, $property)
+    public function getShortDescription($class, $property)
     {
         list($docBlock) = $this->getDocBlock($class, $property);
         if (!$docBlock) {
@@ -63,7 +63,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
     /**
      * {@inheritdoc}
      */
-    public function extractLongDescription($class, $property)
+    public function getLongDescription($class, $property)
     {
         list($docBlock) = $this->getDocBlock($class, $property);
         if (!$docBlock) {
@@ -78,7 +78,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
     /**
      * {@inheritdoc}
      */
-    public function extractTypes($class, $property)
+    public function getTypes($class, $property)
     {
         list($docBlock, $source, $prefix) = $this->getDocBlock($class, $property);
         if (!$docBlock) {
