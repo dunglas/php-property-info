@@ -14,6 +14,6 @@ namespace PropertyInfo;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface PropertyInfoInterface extends PropertyTypeInfo, PropertyDescriptionInfoInterface
+interface PropertyInfoInterface extends PropertyTypeInfoInterface, PropertyDescriptionInfoInterface
 {
 }
