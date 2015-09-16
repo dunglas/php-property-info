@@ -19,27 +19,30 @@ interface PropertyInfoInterface
     /**
      * Gets the short description of the property.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string $class
+     * @param string $property
      *
      * @return string|null
      */
-    public function getShortDescription(\ReflectionProperty $reflectionProperty);
+    public function getShortDescription($class, $property);
 
     /**
      * Gets the short description of the property.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string $class
+     * @param string $property
      *
      * @return string|null
      */
-    public function getLongDescription(\ReflectionProperty $reflectionProperty);
+    public function getLongDescription($class, $property);
 
     /**
      * Gets types of the property.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string $class
+     * @param string $property
      *
      * @return Type[]|null
      */
-    public function getTypes(\ReflectionProperty $reflectionProperty);
+    public function getTypes($class, $property);
 }

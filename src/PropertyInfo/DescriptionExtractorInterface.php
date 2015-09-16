@@ -19,18 +19,20 @@ interface DescriptionExtractorInterface
     /**
      * Extracts the short description of the property.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string $class
+     * @param string $property
      *
      * @return string|null
      */
-    public function extractShortDescription(\ReflectionProperty $reflectionProperty);
+    public function extractShortDescription($class, $property);
 
     /**
      * Extracts the long description of the property.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string $class
+     * @param string $property
      *
      * @return string|null
      */
-    public function extractLongDescription(\ReflectionProperty $reflectionProperty);
+    public function extractLongDescription($class, $property);
 }

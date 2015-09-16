@@ -11,11 +11,12 @@ namespace PropertyInfo\Extractors;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use PropertyInfo\Type;
 use PropertyInfo\TypeExtractorInterface;
 
 /**
- * Doctrine ORM and ODM Extractor.
+ * Extracts data using Doctrine ORM and ODM metadata.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
@@ -31,44 +32,47 @@ class DoctrineExtractor implements TypeExtractorInterface
         $this->classMetadataFactory = $classMetadataFactory;
     }
 
-    public function extractTypes(\ReflectionProperty $reflectionProperty)
+    /**
+     * {@inheritdoc}
+     */
+    public function extractTypes($class, $property)
     {
-        $className = $reflectionProperty->getDeclaringClass()->getName();
-
         try {
-            $metadata = $this->classMetadataFactory->getMetadataFor($className);
+            $metadata = $this->classMetadataFactory->getMetadataFor($class);
         } catch (MappingException $exception) {
             return;
         }
 
-        $type = new Type();
-        $propertyName = $reflectionProperty->getName();
+        if ($metadata->hasAssociation($property)) {
+            $class = $metadata->getAssociationTargetClass($property);
 
-        if ($metadata->hasAssociation($propertyName)) {
-            $class = $metadata->getAssociationTargetClass($propertyName);
+            if ($metadata->isSingleValuedAssociation($property)) {
+                if ($metadata instanceof ClassMetadataInfo) {
+                    $nullable = isset($metadata->discriminatorColumn['nullable']) ? $metadata->discriminatorColumn['nullable'] : false;
+                } else {
+                    $nullable = false;
+                }
 
-            if ($metadata->isSingleValuedAssociation($propertyName)) {
-                $type->setCollection(false);
-                $type->setType('object');
-                $type->setClass($class);
-            } else {
-                $type->setCollection(true);
-                $type->setType('object');
-                $type->setClass('Doctrine\Common\Collections\Collection');
-
-                $collectionType = new Type();
-                $collectionType->setCollection(false);
-                $collectionType->setType('object');
-                $collectionType->setClass($class);
-
-                $type->setCollectionType($collectionType);
+                return [new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $class)];
             }
 
-            return [$type];
+            return [new Type(
+                Type::BUILTIN_TYPE_OBJECT,
+                false,
+                'Doctrine\Common\Collections\Collection',
+                true,
+                new Type(Type::BUILTIN_TYPE_INT),
+                new Type(Type::BUILTIN_TYPE_OBJECT, false, $class)
+            )];
         }
 
-        if ($metadata->hasField($propertyName)) {
-            $typeOfField = $metadata->getTypeOfField($propertyName);
+        if ($metadata->hasField($property)) {
+            $typeOfField = $metadata->getTypeOfField($property);
+            if ($metadata instanceof ClassMetadataInfo) {
+                $nullable = $metadata->isNullable($property);
+            } else {
+                $nullable = false;
+            }
 
             switch ($typeOfField) {
                 case 'date':
@@ -78,33 +82,24 @@ class DoctrineExtractor implements TypeExtractorInterface
                 case 'datetimetz':
                     // No break
                 case 'time':
-                    $type->setType('object');
-                    $type->setClass('DateTime');
-                    $type->setCollection(false);
-
-                    return [$type];
+                    return [new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, 'DateTime')];
 
                 case 'array':
                     // No break
                 case 'simple_array':
-                    // No break
-                case 'json_array':
-                    $type->setType('array');
-                    $type->setCollection(true);
+                    return [new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true, new Type(Type::BUILTIN_TYPE_INT))];
 
-                    return [$type];
+                case 'json_array':
+                    return [new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true)];
 
                 default:
-                    $type->setType($this->getPhpType($typeOfField));
-                    $type->setCollection(false);
-
-                    return [$type];
+                    return [new Type($this->getPhpType($typeOfField), $nullable)];
             }
         }
     }
 
     /**
-     * Gets the corresponding PHP type.
+     * Gets the corresponding built-in PHP type.
      *
      * @param string $doctrineType
      *
@@ -118,23 +113,23 @@ class DoctrineExtractor implements TypeExtractorInterface
             case 'bigint':
                 // No break
             case 'integer':
-                return 'int';
+                return Type::BUILTIN_TYPE_INT;
 
             case 'decimal':
-                return 'float';
+                return Type::BUILTIN_TYPE_FLOAT;
 
             case 'text':
                 // No break
             case 'guid':
-                return 'string';
+                return Type::BUILTIN_TYPE_STRING;
 
             case 'boolean':
-                return 'bool';
+                return Type::BUILTIN_TYPE_BOOL;
 
             case 'blob':
                 // No break
             case 'binary':
-                return 'resource';
+                return Type::BUILTIN_TYPE_RESOURCE;
 
             default:
                 return $doctrineType;
