@@ -32,7 +32,7 @@
         "phpdocumentor/reflection": "~1.0"
     },
     "conflict": {
-        "phpdocumentor/reflection": "<1.0.4"
+        "phpdocumentor/reflection": "<1.0.7"
     },
     "suggest": {
         "doctrine/orm": "To use Doctrine metadata",
