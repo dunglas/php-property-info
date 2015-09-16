@@ -26,7 +26,7 @@ class PropertyInfo implements PropertyInfoInterface
     private $descriptionExtractors;
 
     /**
-     * @param TypeExtractorInterface[]        $typeExtractors
+     * @param TypeExtractorInterface[]           $typeExtractors
      * @param PropertyDescriptionInfoInterface[] $descriptionExtractors
      */
     public function __construct(

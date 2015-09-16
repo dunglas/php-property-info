@@ -18,7 +18,6 @@ use PropertyInfo\Type;
  */
 class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeInfoInterface
 {
-
     /**
      * {@inheritdoc}
      */
