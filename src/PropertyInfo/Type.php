@@ -31,7 +31,7 @@ class Type
      *
      * @var string[]
      */
-    public static $builtinTypes = [
+    public static $builtinTypes = array(
         self::BUILTIN_TYPE_INT,
         self::BUILTIN_TYPE_FLOAT,
         self::BUILTIN_TYPE_STRING,
@@ -41,7 +41,7 @@ class Type
         self::BUILTIN_TYPE_ARRAY,
         self::BUILTIN_TYPE_CALLABLE,
         self::BUILTIN_TYPE_NULL,
-    ];
+    );
 
     /**
      * @var string
