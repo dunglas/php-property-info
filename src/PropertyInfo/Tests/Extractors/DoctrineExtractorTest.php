@@ -35,7 +35,7 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testExtractors($property, array $type = null)
+    public function testExtract($property, array $type = null)
     {
         $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\DoctrineDummy', $property));
     }

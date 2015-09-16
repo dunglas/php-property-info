@@ -30,7 +30,7 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider typesProvider
      */
-    public function testExtractors($property, array $type = null, $shortDescription, $longDescription)
+    public function testExtract($property, array $type = null, $shortDescription, $longDescription)
     {
         $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Dummy', $property));
         $this->assertSame($shortDescription, $this->extractor->getShortDescription('PropertyInfo\Tests\Fixtures\Dummy', $property));

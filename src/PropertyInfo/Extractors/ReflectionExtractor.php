@@ -98,12 +98,26 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
         $reflectionParameters = $reflectionMethod->getParameters();
         $reflectionParameter = $reflectionParameters[0];
 
+        $arrayMutator = in_array($prefix, self::$arrayMutatorPrefixes);
+
+        if (method_exists($reflectionParameter, 'getType') && $reflectionType = $reflectionParameter->getType()) {
+            $fromReflectionType = $this->extractFromReflectionType($reflectionType);
+
+            if (!$arrayMutator) {
+                return array($fromReflectionType);
+            }
+
+            $phpType = Type::BUILTIN_TYPE_ARRAY;
+            $collectionKeyType = new Type(Type::BUILTIN_TYPE_INT);
+            $collectionValueType = $fromReflectionType;
+        }
+
         if ($reflectionParameter->isArray()) {
             $phpType = Type::BUILTIN_TYPE_ARRAY;
             $collection = true;
         }
 
-        if (in_array($prefix, self::$arrayMutatorPrefixes)) {
+        if ($arrayMutator) {
             $collection = true;
             $nullable = false;
             $collectionNullable = $reflectionParameter->allowsNull();
@@ -123,7 +137,6 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
         if ($typeHint = $reflectionParameter->getClass()) {
             if ($collection) {
                 $phpType = Type::BUILTIN_TYPE_ARRAY;
-
                 $collectionKeyType = new Type(Type::BUILTIN_TYPE_INT);
                 $collectionValueType = new Type(Type::BUILTIN_TYPE_OBJECT, $collectionNullable, $typeHint->name);
             } else {
@@ -176,7 +189,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
         }
 
         if (method_exists($reflectionMethod, 'getReturnType') && $reflectionType = $reflectionMethod->getReturnType()) {
-            return $this->extractFromReturnType($reflectionType);
+            return array($this->extractFromReflectionType($reflectionType));
         }
 
         if (in_array($prefix, array('is', 'can'))) {
@@ -191,7 +204,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
      *
      * @return Type[]
      */
-    private function extractFromReturnType(\ReflectionType $reflectionType)
+    private function extractFromReflectionType(\ReflectionType $reflectionType)
     {
         $phpTypeOrClass = (string) $reflectionType;
         $nullable = $reflectionType->allowsNull();
@@ -206,7 +219,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
             $type = new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $phpTypeOrClass);
         }
 
-        return array($type);
+        return $type;
     }
 
     private function parseHackType()

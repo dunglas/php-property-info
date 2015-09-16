@@ -46,4 +46,24 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
             array('f', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime')))),
         );
     }
+    /**
+     * @dataProvider php7TypesProvider
+     */
+    public function testExtractPhp7Type($property, array $type = null)
+    {
+        if (!method_exists('\ReflectionMethod', 'getReturnType')) {
+            $this->markTestSkipped('Available only with PHP 7 and superior.');
+        }
+
+        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Php7Dummy', $property));
+    }
+
+    public function php7TypesProvider()
+    {
+        return array(
+            array('foo', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true))),
+            array('bar', array(new Type(Type::BUILTIN_TYPE_INT))),
+            array('baz', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_STRING)))),
+        );
+    }
 }
