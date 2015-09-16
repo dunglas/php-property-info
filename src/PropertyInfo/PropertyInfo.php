@@ -9,6 +9,11 @@
 
 namespace PropertyInfo;
 
+/**
+ * Default {@see PropertyInfoInterface} implementation.
+ *
+ * @author Kévin Dunglas <dunglas@gmail.com>
+ */
 class PropertyInfo implements PropertyInfoInterface
 {
     /**
@@ -32,30 +37,39 @@ class PropertyInfo implements PropertyInfoInterface
         $this->descriptionExtractors = $descriptionExtractors;
     }
 
-    public function getShortDescription(\ReflectionProperty $reflectionProperty)
+    /**
+     * {@inheritdoc}
+     */
+    public function getShortDescription($class, $propertye)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractShortDescription($reflectionProperty);
+            $desc = $extractor->extractShortDescription($class, $property);
             if (null !== $desc) {
                 return $desc;
             }
         }
     }
 
-    public function getLongDescription(\ReflectionProperty $reflectionProperty)
+    /**
+     * {@inheritdoc}
+     */
+    public function getLongDescription($class, $property)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractLongDescription($reflectionProperty);
+            $desc = $extractor->extractLongDescription($class, $property);
             if (null !== $desc) {
                 return $desc;
             }
         }
     }
 
-    public function getTypes(\ReflectionProperty $reflectionProperty)
+    /**
+     * {@inheritdoc}
+     */
+    public function getTypes($class, $property)
     {
         foreach ($this->typeExtractors as $extractor) {
-            $type = $extractor->extractTypes($reflectionProperty);
+            $type = $extractor->extractTypes($class, $property);
             if (null !== $type) {
                 return $type;
             }

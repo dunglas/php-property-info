@@ -10,81 +10,121 @@
 namespace PropertyInfo;
 
 /**
- * Type.
+ * Type value object (immutable).
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
 class Type
 {
-    /**
-     * @var string
-     *
-     * @internal For performance purpose (serialization). Use {@see getType()} instead.
-     */
-    public $type;
-    /**
-     * @var string|null
-     *
-     * @internal For performance purpose (serialization). Use {@see getClass()} instead.
-     */
-    public $class;
-    /**
-     * @var bool
-     *
-     * @internal For performance purpose (serialization). Use {@see isCollection()} instead.
-     */
-    public $collection;
-    /**
-     * @var Type
-     *
-     * @internal For performance purpose (serialization). Use {@see getCollectionType()} instead.
-     */
-    public $collectionType;
+    const BUILTIN_TYPE_INT = 'int';
+    const BUILTIN_TYPE_FLOAT = 'float';
+    const BUILTIN_TYPE_STRING = 'string';
+    const BUILTIN_TYPE_BOOL = 'bool';
+    const BUILTIN_TYPE_RESOURCE = 'resource';
+    const BUILTIN_TYPE_OBJECT = 'object';
+    const BUILTIN_TYPE_ARRAY = 'array';
+    const BUILTIN_TYPE_NULL = 'null';
+    const BUILTIN_TYPE_CALLABLE = 'callable';
 
     /**
-     * Gets type.
+     * List of PHP builtin types.
+     *
+     * @var string[]
+     */
+    public static $builtinTypes = [
+        self::BUILTIN_TYPE_INT,
+        self::BUILTIN_TYPE_FLOAT,
+        self::BUILTIN_TYPE_STRING,
+        self::BUILTIN_TYPE_BOOL,
+        self::BUILTIN_TYPE_RESOURCE,
+        self::BUILTIN_TYPE_OBJECT,
+        self::BUILTIN_TYPE_ARRAY,
+        self::BUILTIN_TYPE_CALLABLE,
+        self::BUILTIN_TYPE_NULL,
+    ];
+
+    /**
+     * @var string
+     */
+    private $builtinType;
+    /**
+     * @var bool
+     */
+    private $nullable;
+    /**
+     * @var string|null
+     */
+    private $class;
+    /**
+     * @var bool
+     */
+    private $collection;
+    /**
+     * @var Type|null
+     */
+    private $collectionKeyType;
+    /**
+     * @var Type|null
+     */
+    private $collectionValueType;
+
+    /**
+     * @param string      $builtinType
+     * @param bool        $nullable
+     * @param string|null $class
+     * @param bool        $collection
+     * @param Type|null   $collectionKeyType
+     * @param Type|null   $collectionValueType
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($builtinType, $nullable = false, $class = null, $collection = false, Type $collectionKeyType = null, Type $collectionValueType = null)
+    {
+        if (!in_array($builtinType, self::$builtinTypes)) {
+            throw new \InvalidArgumentException(sprintf('"%s" is not a PHP valid type.', $builtinType));
+        }
+
+        $this->builtinType = $builtinType;
+        $this->nullable = $nullable;
+        $this->class = $class;
+        $this->collection = $collection;
+        $this->collectionKeyType = $collectionKeyType;
+        $this->collectionValueType = $collectionValueType;
+    }
+
+    /**
+     * Gets built-in type.
      *
      * Can be bool, int, float, string, array, object, resource, null or callback.
      *
      * @return string
      */
-    public function getType()
+    public function getBuiltinType()
     {
-        return $this->type;
+        return $this->builtinType;
     }
 
     /**
-     * Sets types.
+     * Allows null value?
      *
-     * @param string $type
+     * @return bool
      */
-    public function setType($type)
+    public function isNullable()
     {
-        $this->type = $type;
+        return $this->nullable;
     }
 
     /**
-     * Gets class name.
+     * Gets the class name.
      *
-     * Only applicable if the type is object.
+     * Only applicable if the built-in type is object.
      *
      * @return string|null
      */
-    public function getClass()
+    public function getClassName()
     {
         return $this->class;
     }
-
-    /**
-     * Sets class name.
-     *
-     * @param string|null $class
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-    }
-
     /**
      * Is collection?
      *
@@ -96,34 +136,26 @@ class Type
     }
 
     /**
-     * Sets collection.
+     * Gets collection key type.
      *
-     * @param bool $collection
-     */
-    public function setCollection($collection)
-    {
-        $this->collection = $collection;
-    }
-
-    /**
-     * Gets collection type.
-     *
-     * Only applicable if is a collection.
+     * Only applicable for a collection type.
      *
      * @return Type|null
      */
-    public function getCollectionType()
+    public function getCollectionKeyType()
     {
-        return $this->collectionType;
+        return $this->collectionKeyType;
     }
 
     /**
-     * Sets collection type.
+     * Gets collection value type.
      *
-     * @param Type $collectionType
+     * Only applicable for a collection type.
+     *
+     * @return Type|null
      */
-    public function setCollectionType(Type $collectionType)
+    public function getCollectionValueType()
     {
-        $this->collectionType = $collectionType;
+        return $this->collectionValueType;
     }
 }

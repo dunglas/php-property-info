@@ -19,9 +19,10 @@ interface TypeExtractorInterface
     /**
      * Extracts the type.
      *
-     * @param \ReflectionProperty $reflectionProperty
+     * @param string|\ReflectionClass|null $class
+     * @param string|\ReflectionProperty   $property
      *
      * @return Type[]|null
      */
-    public function extractTypes(\ReflectionProperty $reflectionProperty);
+    public function extractTypes($class, $property);
 }

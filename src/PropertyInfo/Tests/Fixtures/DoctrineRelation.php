@@ -7,10 +7,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Tests\DoctrineExtractors\Data;
+namespace PropertyInfo\Tests\Fixtures;
+
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Id;
 
 /**
  * @Entity
+ *
+ * @author Kévin Dunglas <dunglas@gmail.com>
  */
 class DoctrineRelation
 {
