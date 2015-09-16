@@ -9,8 +9,8 @@
 
 namespace PropertyInfo\Extractors;
 
+use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
-use PropertyInfo\TypeExtractorInterface;
 
 /**
  * Extracts type info using reflection.
@@ -20,7 +20,7 @@ use PropertyInfo\TypeExtractorInterface;
  * @author Kévin Dunglas <dunglas@gmail.com>
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-class ReflectionExtractor implements TypeExtractorInterface
+class ReflectionExtractor implements PropertyTypeInfoInterface
 {
     /**
      * @var string[]
@@ -38,7 +38,7 @@ class ReflectionExtractor implements TypeExtractorInterface
     /**
      * {@inheritdoc}
      */
-    public function extractTypes($class, $property)
+    public function getTypes($class, $property)
     {
         if (defined('HHVM_VERSION') && $fromProperty = $this->extractFromProperty($class, $property)) {
             return $fromProperty;

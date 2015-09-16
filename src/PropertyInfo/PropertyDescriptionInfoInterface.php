@@ -10,29 +10,29 @@
 namespace PropertyInfo;
 
 /**
- * Description Extractor Interface.
+ * Description extractor Interface.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface DescriptionExtractorInterface
+interface PropertyDescriptionInfoInterface
 {
     /**
-     * Extracts the short description of the property.
+     * Gets the short description of the property.
      *
      * @param string $class
      * @param string $property
      *
      * @return string|null
      */
-    public function extractShortDescription($class, $property);
+    public function getShortDescription($class, $property);
 
     /**
-     * Extracts the long description of the property.
+     * Gets the long description of the property.
      *
      * @param string $class
      * @param string $property
      *
      * @return string|null
      */
-    public function extractLongDescription($class, $property);
+    public function getLongDescription($class, $property);
 }

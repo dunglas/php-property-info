@@ -14,35 +14,6 @@ namespace PropertyInfo;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface PropertyInfoInterface
+interface PropertyInfoInterface extends PropertyTypeInfo, PropertyDescriptionInfoInterface
 {
-    /**
-     * Gets the short description of the property.
-     *
-     * @param string $class
-     * @param string $property
-     *
-     * @return string|null
-     */
-    public function getShortDescription($class, $property);
-
-    /**
-     * Gets the short description of the property.
-     *
-     * @param string $class
-     * @param string $property
-     *
-     * @return string|null
-     */
-    public function getLongDescription($class, $property);
-
-    /**
-     * Gets types of the property.
-     *
-     * @param string $class
-     * @param string $property
-     *
-     * @return Type[]|null
-     */
-    public function getTypes($class, $property);
 }

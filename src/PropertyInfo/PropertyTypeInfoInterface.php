@@ -14,15 +14,15 @@ namespace PropertyInfo;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface TypeExtractorInterface
+interface PropertyTypeInfoInterface
 {
     /**
-     * Extracts the type.
+     * Gets types of a property.
      *
      * @param string|\ReflectionClass|null $class
      * @param string|\ReflectionProperty   $property
      *
      * @return Type[]|null
      */
-    public function extractTypes($class, $property);
+    public function getTypes($class, $property);
 }

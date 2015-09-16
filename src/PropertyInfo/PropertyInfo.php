@@ -21,13 +21,13 @@ class PropertyInfo implements PropertyInfoInterface
      */
     private $typeExtractors;
     /**
-     * @var DescriptionExtractorInterface[]
+     * @var PropertyDescriptionInfoInterface[]
      */
     private $descriptionExtractors;
 
     /**
      * @param TypeExtractorInterface[]        $typeExtractors
-     * @param DescriptionExtractorInterface[] $descriptionExtractors
+     * @param PropertyDescriptionInfoInterface[] $descriptionExtractors
      */
     public function __construct(
         array $typeExtractors,
@@ -40,10 +40,10 @@ class PropertyInfo implements PropertyInfoInterface
     /**
      * {@inheritdoc}
      */
-    public function getShortDescription($class, $propertye)
+    public function getShortDescription($class, $property)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractShortDescription($class, $property);
+            $desc = $extractor->getShortDescription($class, $property);
             if (null !== $desc) {
                 return $desc;
             }
@@ -56,7 +56,7 @@ class PropertyInfo implements PropertyInfoInterface
     public function getLongDescription($class, $property)
     {
         foreach ($this->descriptionExtractors as $extractor) {
-            $desc = $extractor->extractLongDescription($class, $property);
+            $desc = $extractor->getLongDescription($class, $property);
             if (null !== $desc) {
                 return $desc;
             }

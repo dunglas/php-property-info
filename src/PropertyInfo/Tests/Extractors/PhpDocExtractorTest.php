@@ -18,7 +18,7 @@ use PropertyInfo\Type;
 class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PhpDocExtractor
+     * @var PhpDocPropertyInfo
      */
     private $extractor;
 
@@ -32,9 +32,9 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtractors($property, array $type = null, $shortDescription, $longDescription)
     {
-        $this->assertEquals($type, $this->extractor->extractTypes('PropertyInfo\Tests\Fixtures\Dummy', $property));
-        $this->assertSame($shortDescription, $this->extractor->extractShortDescription('PropertyInfo\Tests\Fixtures\Dummy', $property));
-        $this->assertSame($longDescription, $this->extractor->extractLongDescription('PropertyInfo\Tests\Fixtures\Dummy', $property));
+        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Dummy', $property));
+        $this->assertSame($shortDescription, $this->extractor->getShortDescription('PropertyInfo\Tests\Fixtures\Dummy', $property));
+        $this->assertSame($longDescription, $this->extractor->getLongDescription('PropertyInfo\Tests\Fixtures\Dummy', $property));
     }
 
     public function typesProvider()
