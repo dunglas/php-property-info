@@ -99,7 +99,7 @@ class PhpDocExtractor implements PropertyDescriptionInfoInterface, PropertyTypeI
                 break;
         }
 
-        $types = [];
+        $types = array();
         foreach ($docBlock->getTagsByName($tag) as $tag) {
             $varTypes = $tag->getTypes();
 
