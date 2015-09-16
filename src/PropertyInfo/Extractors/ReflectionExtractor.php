@@ -116,7 +116,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
             $collection = false;
         }
 
-        if ($reflectionParameter->isCallable()) {
+        if (method_exists($reflectionParameter, 'isCallable') && $reflectionParameter->isCallable()) {
             $phpType = Type::BUILTIN_TYPE_CALLABLE;
         }
 
@@ -175,7 +175,7 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
             return;
         }
 
-        if (version_compare(PHP_VERSION, '7.0.0-dev', '>=') && $reflectionType = $reflectionMethod->getReturnType()) {
+        if (method_exists($reflectionMethod, 'getReturnType') && $reflectionType = $reflectionMethod->getReturnType()) {
             return $this->extractFromReturnType($reflectionType);
         }
 
