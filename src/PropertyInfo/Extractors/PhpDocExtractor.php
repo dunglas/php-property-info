@@ -30,11 +30,11 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
     /**
      * @var FileReflector[]
      */
-    private static $fileReflectors = [];
+    private static $fileReflectors = array();
     /**
      * @var DocBlock[]
      */
-    private static $docBlocks = [];
+    private static $docBlocks = array();
 
     /**
      * {@inheritdoc}
@@ -128,7 +128,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
             return $types;
         }
 
-        return [new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), $types[0])];
+        return array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), $types[0]));
     }
 
     /**
@@ -174,19 +174,19 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
 
         switch (true) {
             case $docBlock = $this->getDocBlockFromProperty($class, $property):
-                $data = [$docBlock, self::PROPERTY, null];
+                $data = array($docBlock, self::PROPERTY, null);
                 break;
 
             case list($docBlock) = $this->getDocBlockFromMethod($class, $ucFirstProperty, self::ACCESSOR):
-                $data = [$docBlock, self::ACCESSOR, null];
+                $data = array($docBlock, self::ACCESSOR, null);
                 break;
 
             case list($docBlock, $prefix) = $this->getDocBlockFromMethod($class, $ucFirstProperty, self::MUTATOR):
-                $data = [$docBlock, self::MUTATOR, $prefix];
+                $data = array($docBlock, self::MUTATOR, $prefix);
                 break;
 
             default:
-                $data = [null, null];
+                $data = array(null, null);
         }
 
         return self::$docBlocks[$propertyHash] = $data;
@@ -278,7 +278,7 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
 
             if ($className === $reflectionClass->name) {
                 if ($methodReflector = $classReflector->getMethod($methodName)) {
-                    return [$methodReflector->getDocBlock(), $prefix];
+                    return array($methodReflector->getDocBlock(), $prefix);
                 }
             }
         }
@@ -381,9 +381,9 @@ class PhpDocExtractor implements DescriptionExtractorInterface, TypeExtractorInt
     private function getPhpTypeAndClass($docType)
     {
         if (in_array($docType, Type::$builtinTypes)) {
-            return [$docType, null];
+            return array($docType, null);
         }
 
-        return ['object', substr($docType, 1)];
+        return array('object', substr($docType, 1));
     }
 }

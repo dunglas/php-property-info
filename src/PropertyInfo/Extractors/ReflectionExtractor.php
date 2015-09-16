@@ -25,15 +25,15 @@ class ReflectionExtractor implements TypeExtractorInterface
     /**
      * @var string[]
      */
-    public static $mutatorPrefixes = ['add', 'remove', 'set'];
+    public static $mutatorPrefixes = array('add', 'remove', 'set');
     /**
      * @var string[]
      */
-    public static $accessorPrefixes = ['is', 'can', 'get'];
+    public static $accessorPrefixes = array('is', 'can', 'get');
     /**
      * @var array[]
      */
-    public static $arrayMutatorPrefixes = ['add', 'remove'];
+    public static $arrayMutatorPrefixes = array('add', 'remove');
 
     /**
      * {@inheritdoc}
@@ -137,7 +137,7 @@ class ReflectionExtractor implements TypeExtractorInterface
             return;
         }
 
-        return [
+        return array(
             new Type(
                 $phpType,
                 $nullable,
@@ -146,7 +146,7 @@ class ReflectionExtractor implements TypeExtractorInterface
                 isset($collectionKeyType) ? $collectionKeyType : null,
                 isset($collectionValueType) ? $collectionValueType : null
             ),
-        ];
+        );
     }
 
     /**
@@ -179,8 +179,8 @@ class ReflectionExtractor implements TypeExtractorInterface
             return $this->extractFromReturnType($reflectionType);
         }
 
-        if (in_array($prefix, ['is', 'can'])) {
-            return [new Type(Type::BUILTIN_TYPE_BOOL)];
+        if (in_array($prefix, array('is', 'can'))) {
+            return array(new Type(Type::BUILTIN_TYPE_BOOL));
         }
     }
 
@@ -206,7 +206,7 @@ class ReflectionExtractor implements TypeExtractorInterface
             $type = new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $phpTypeOrClass);
         }
 
-        return [$type];
+        return array($type);
     }
 
     private function parseHackType()

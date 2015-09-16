@@ -37,13 +37,13 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
 
     public function typesProvider()
     {
-        return [
-            ['a', null],
-            ['b', [new Type(Type::BUILTIN_TYPE_OBJECT, true, 'PropertyInfo\Tests\Fixtures\ParentDummy')]],
-            ['c', null],
-            ['d', null],
-            ['e', null],
-            ['f', [new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime'))]],
-        ];
+        return array(
+            array('a', null),
+            array('b', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'PropertyInfo\Tests\Fixtures\ParentDummy'))),
+            array('c', null),
+            array('d', null),
+            array('e', null),
+            array('f', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime')))),
+        );
     }
 }

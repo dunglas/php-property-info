@@ -53,17 +53,17 @@ class DoctrineExtractor implements TypeExtractorInterface
                     $nullable = false;
                 }
 
-                return [new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $class)];
+                return array(new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, $class));
             }
 
-            return [new Type(
+            return array(new Type(
                 Type::BUILTIN_TYPE_OBJECT,
                 false,
                 'Doctrine\Common\Collections\Collection',
                 true,
                 new Type(Type::BUILTIN_TYPE_INT),
                 new Type(Type::BUILTIN_TYPE_OBJECT, false, $class)
-            )];
+            ));
         }
 
         if ($metadata->hasField($property)) {
@@ -82,18 +82,18 @@ class DoctrineExtractor implements TypeExtractorInterface
                 case 'datetimetz':
                     // No break
                 case 'time':
-                    return [new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, 'DateTime')];
+                    return array(new Type(Type::BUILTIN_TYPE_OBJECT, $nullable, 'DateTime'));
 
                 case 'array':
                     // No break
                 case 'simple_array':
-                    return [new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true, new Type(Type::BUILTIN_TYPE_INT))];
+                    return array(new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true, new Type(Type::BUILTIN_TYPE_INT)));
 
                 case 'json_array':
-                    return [new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true)];
+                    return array(new Type(Type::BUILTIN_TYPE_ARRAY, $nullable, null, true));
 
                 default:
-                    return [new Type($this->getPhpType($typeOfField), $nullable)];
+                    return array(new Type($this->getPhpType($typeOfField), $nullable));
             }
         }
     }
