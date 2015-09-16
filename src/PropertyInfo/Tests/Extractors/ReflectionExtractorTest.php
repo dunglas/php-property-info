@@ -40,8 +40,8 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
         return array(
             array('a', null),
             array('b', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'PropertyInfo\Tests\Fixtures\ParentDummy'))),
-            array('c', null),
-            array('d', null),
+            array('c', array(new Type(Type::BUILTIN_TYPE_BOOL))),
+            array('d', array(new Type(Type::BUILTIN_TYPE_BOOL))),
             array('e', null),
             array('f', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime')))),
         );
