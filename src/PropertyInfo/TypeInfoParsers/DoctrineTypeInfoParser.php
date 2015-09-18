@@ -11,6 +11,7 @@ namespace PropertyInfo\TypeInfoParsers;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use PropertyInfo\Type;
 use PropertyInfo\TypeInfoParserInterface;
 
 /**
@@ -20,11 +21,9 @@ use PropertyInfo\TypeInfoParserInterface;
  */
 class DoctrineTypeInfoParser implements TypeInfoParserInterface
 {
-    use ContainerTypeInfoParser;
-
     const COLLECTION_INTERFACE = 'Doctrine\Common\Collections\Collection';
 
-    protected static $types = [
+    protected static $types = array(
         'boolean' => 'bool',
         'smallint' => 'int',
         'integer' => 'int',
@@ -41,7 +40,12 @@ class DoctrineTypeInfoParser implements TypeInfoParserInterface
         'array' => 'array',
         'simple_array' => 'array',
         'json_array' => 'array',
-    ];
+    );
+
+    /**
+     * @var ContainerTypeInfoParser
+     */
+    private $containerTypeInfoParser;
 
     /**
      * @var ClassMetadataFactory
@@ -51,6 +55,7 @@ class DoctrineTypeInfoParser implements TypeInfoParserInterface
     public function __construct(ClassMetadataFactory $classMetadataFactory)
     {
         $this->classMetadataFactory = $classMetadataFactory;
+        $this->containerTypeInfoParser = new ContainerTypeInfoParser(static::COLLECTION_INTERFACE, static::$types);
     }
 
     /**
@@ -84,5 +89,15 @@ class DoctrineTypeInfoParser implements TypeInfoParserInterface
         } catch (MappingException $exception) {
             /* do nothing */
         }
+    }
+
+    /**
+     * @param string $info
+     *
+     * @return array|Type[]
+     */
+    public function parse($info)
+    {
+        return $this->containerTypeInfoParser->parse($info);
     }
 }

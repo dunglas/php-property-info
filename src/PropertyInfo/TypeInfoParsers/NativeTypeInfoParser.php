@@ -17,8 +17,11 @@ namespace PropertyInfo\TypeInfoParsers;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-trait NativeTypeInfoParser
+class NativeTypeInfoParser
 {
+    const GETTER_FORMAT = 'get%s';
+    const SETTER_FORMAT = 'set%s';
+
     /**
      * @param \ReflectionProperty $property
      *

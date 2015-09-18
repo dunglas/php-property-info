@@ -20,8 +20,17 @@ use PropertyInfo\Type;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-trait ContainerTypeInfoParser
+class ContainerTypeInfoParser
 {
+    protected static $collectionInterface;
+    protected static $types = array();
+
+    public function __construct($collectionInterface, $types)
+    {
+        static::$collectionInterface = $collectionInterface;
+        static::$types = $types;
+    }
+
     /**
      * @param string $info
      *
@@ -34,7 +43,7 @@ trait ContainerTypeInfoParser
         }
 
         if (($type = $this->parseSimpleTypes($info)) || ($type = $this->parseContainerTypes($info))) {
-            return [$type];
+            return array($type);
         }
     }
 
@@ -56,7 +65,7 @@ trait ContainerTypeInfoParser
 
         if (interface_exists($info, true) || class_exists($info, true)) {
             $class = new \ReflectionClass($info);
-            $collection = $class->implementsInterface(static::COLLECTION_INTERFACE);
+            $collection = $class->implementsInterface(static::$collectionInterface);
 
             $type->setType('object');
             $type->setClass($info);

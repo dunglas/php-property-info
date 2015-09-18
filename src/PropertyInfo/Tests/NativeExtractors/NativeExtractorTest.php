@@ -42,7 +42,7 @@ class NativeExtractorTest extends \PHPUnit_Framework_TestCase
     public function testExtractors($class, $extractor, $properties)
     {
         $extractor = new $extractor();
-        $propertyInfo = new PropertyInfo([$extractor], []);
+        $propertyInfo = new PropertyInfo(array($extractor), array());
 
         foreach ($properties as $property) {
             $actualTypes = $propertyInfo->getTypes(new \ReflectionProperty($class, $property['name']));
@@ -56,14 +56,20 @@ class NativeExtractorTest extends \PHPUnit_Framework_TestCase
 
                 if (isset($property['collection'])) {
                     $this->assertEquals($property['collection'], $actualType->isCollection());
-                    $this->assertEquals($property['collectionType']['type'], $actualType->getCollectionType()->getType());
-                    $this->assertEquals($property['collectionType']['class'], $actualType->getCollectionType()->getClass());
+                    $this->assertEquals(
+                        $property['collectionType']['type'],
+                        $actualType->getCollectionType()->getType()
+                    );
+                    $this->assertEquals(
+                        $property['collectionType']['class'],
+                        $actualType->getCollectionType()->getClass()
+                    );
                 }
             } else {
                 $this->fail(
                     vsprintf(
                         'Using "%1$s" type "%2$s" resulted in an empty type list',
-                        [get_class($extractor), $property['type']]
+                        array(get_class($extractor), $property['type'])
                     )
                 );
             }

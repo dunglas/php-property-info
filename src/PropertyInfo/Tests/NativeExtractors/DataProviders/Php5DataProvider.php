@@ -19,19 +19,19 @@ class Php5DataProvider
      */
     public function extractorsDataProvider()
     {
-        $properties = [
-            ['name' => 'array', 'type' => 'array', 'class' => null],
-            ['name' => 'callable', 'type' => 'callable', 'class' => null],
-            ['name' => 'object', 'type' => 'object', 'class' => 'stdClass'],
-        ];
+        $properties = array(
+            array('name' => 'array', 'type' => 'array', 'class' => null),
+            array('name' => 'callable', 'type' => 'callable', 'class' => null),
+            array('name' => 'object', 'type' => 'object', 'class' => 'stdClass'),
+        );
 
-        $cases = [
-            [
+        $cases = array(
+            array(
                 'PropertyInfo\Tests\NativeExtractors\Data\Php5Data',
                 'PropertyInfo\Extractors\SetterExtractor',
                 $properties,
-            ],
-        ];
+            ),
+        );
 
         return $cases;
     }

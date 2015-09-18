@@ -22,41 +22,54 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function extractorsDataProvider()
     {
-        $properties = [
-            [
+        $properties = array(
+            array(
                 'name' => 'id',
                 'type' => 'int',
                 'collection' => false,
                 'class' => null,
-            ],
-            [
+            ),
+            array(
                 'name' => 'guid',
                 'type' => 'string',
                 'collection' => false,
                 'class' => null,
-            ],
-            [
+            ),
+            array(
                 'name' => 'bool',
                 'type' => 'bool',
                 'collection' => false,
                 'class' => null,
-            ],
-            ['name' => 'binary', 'type' => 'resource', 'collection' => false, 'class' => null],
-            ['name' => 'json', 'type' => 'array', 'collection' => true, 'class' => null],
-            ['name' => 'foo', 'type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'],
-            [
+            ),
+            array('name' => 'binary', 'type' => 'resource', 'collection' => false, 'class' => null),
+            array('name' => 'json', 'type' => 'array', 'collection' => true, 'class' => null),
+            array(
+                'name' => 'foo',
+                'type' => 'object',
+                'collection' => false,
+                'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation',
+            ),
+            array(
                 'name' => 'bar',
                 'type' => 'object',
                 'collection' => true,
                 'class' => 'Doctrine\Common\Collections\Collection',
-                'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation'],
-            ],
-            ['name' => 'notMapped', 'type' => null, 'collection' => false, 'class' => null],
-    ];
+                'collectionType' => array(
+                    'type' => 'object',
+                    'collection' => false,
+                    'class' => 'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineRelation',
+            ),
+            ),
+            array('name' => 'notMapped', 'type' => null, 'collection' => false, 'class' => null),
+    );
 
-        $cases = [
-            ['PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineDummy', 'PropertyInfo\Extractors\DoctrineExtractor', $properties],
-        ];
+        $cases = array(
+            array(
+                'PropertyInfo\Tests\DoctrineExtractors\Data\DoctrineDummy',
+                'PropertyInfo\Extractors\DoctrineExtractor',
+                $properties,
+            ),
+        );
 
         return $cases;
     }
@@ -70,12 +83,12 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtractors($class, $extractor, $properties)
     {
-        $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
-        $entityManager = EntityManager::create(['driver' => 'pdo_sqlite'], $config);
+        $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__), true);
+        $entityManager = EntityManager::create(array('driver' => 'pdo_sqlite'), $config);
 
         /** @var TypeExtractorInterface $extractor */
         $extractor = new $extractor($entityManager->getMetadataFactory());
-        $propertyInfo = new PropertyInfo([$extractor], []);
+        $propertyInfo = new PropertyInfo(array($extractor), array());
 
         foreach ($properties as $property) {
             $reflectionProperty = new \ReflectionProperty($class, $property['name']);
