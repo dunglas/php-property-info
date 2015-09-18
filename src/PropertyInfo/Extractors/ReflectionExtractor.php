@@ -9,6 +9,7 @@
 
 namespace PropertyInfo\Extractors;
 
+use PropertyInfo\Hack\TypeTextParser;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
 
@@ -222,7 +223,15 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
         return $type;
     }
 
-    private function parseHackType()
+    /**
+     * @param string $typeText
+     *
+     * @return Type
+     */
+    private function parseHackType($typeText)
     {
+        $parser = new TypeTextParser();
+
+        return $parser->parse($typeText);
     }
 }
