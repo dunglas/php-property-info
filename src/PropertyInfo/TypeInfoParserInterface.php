@@ -29,20 +29,6 @@ interface TypeInfoParserInterface
     public function getPropertyType(\ReflectionProperty $property);
 
     /**
-     * @param \ReflectionProperty $property
-     *
-     * @return string|null
-     */
-    public function getGetterReturnType(\ReflectionProperty $property);
-
-    /**
-     * @param \ReflectionProperty $property
-     *
-     * @return string|null
-     */
-    public function getSetterParamType(\ReflectionProperty $property);
-
-    /**
      * @param string $info
      *
      * @return array|Type[]

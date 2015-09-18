@@ -21,63 +21,63 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function extractorsDataProvider()
     {
-        $properties = [
-            [
+        $properties = array(
+            array(
                 'name' => 'foo',
                 'type' => null,
                 'collection' => false,
                 'class' => null,
                 'short_description' => 'Short description.',
                 'long_description' => 'Long description.',
-            ],
-            [
+            ),
+            array(
                 'name' => 'bar',
                 'type' => 'string',
                 'collection' => false,
                 'class' => null,
                 'short_description' => 'This is bar.',
-            ],
-            [
+            ),
+            array(
                 'name' => 'baz',
                 'type' => 'int',
                 'collection' => false,
                 'class' => null,
                 'short_description' => 'Should be used.',
-            ],
-            ['name' => 'foo2', 'type' => 'float', 'collection' => false, 'class' => null],
-            ['name' => 'foo3', 'type' => 'callable', 'collection' => false, 'class' => null],
-            ['name' => 'foo4', 'type' => 'null', 'collection' => false, 'class' => null],
-            ['name' => 'foo5', 'type' => null, 'collection' => false, 'class' => null],
-            [
+            ),
+            array('name' => 'foo2', 'type' => 'float', 'collection' => false, 'class' => null),
+            array('name' => 'foo3', 'type' => 'callable', 'collection' => false, 'class' => null),
+            array('name' => 'foo4', 'type' => 'null', 'collection' => false, 'class' => null),
+            array('name' => 'foo5', 'type' => null, 'collection' => false, 'class' => null),
+            array(
                 'name' => 'files',
                 'type' => 'array',
                 'collection' => true,
                 'class' => null,
-                'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'SplFileInfo'],
-            ],
-            ['name' => 'bal', 'type' => 'object', 'collection' => false, 'class' => 'DateTime'],
-            [
+                'collectionType' => array('type' => 'object', 'collection' => false, 'class' => 'SplFileInfo'),
+            ),
+            array('name' => 'bal', 'type' => 'object', 'collection' => false, 'class' => 'DateTime'),
+            array(
                 'name' => 'parent',
                 'type' => 'object',
                 'collection' => false,
                 'class' => 'PropertyInfo\Tests\PhpDocExtractors\Data\PhpDocParent',
-            ],
-            [
+            ),
+            array(
                 'name' => 'collection',
                 'type' => 'array',
                 'collection' => true,
                 'class' => null,
-                'collectionType' => ['type' => 'object', 'collection' => false, 'class' => 'DateTime'],
-            ],
-        ];
+                'collectionType' => array('type' => 'object', 'collection' => false, 'class' => 'DateTime'),
+            ),
+    );
 
-        $cases = [
-            [
+        $cases = array(
+            array(
                 'PropertyInfo\Tests\PhpDocExtractors\Data\PhpDocDummy',
                 'PropertyInfo\Extractors\PhpDocExtractor',
                 $properties,
-            ],
-        ];
+            ),
+        );
 
         return $cases;
     }
@@ -93,7 +93,7 @@ class PhpDocExtractorTest extends \PHPUnit_Framework_TestCase
     {
         /** @var TypeExtractorInterface|DescriptionExtractorInterface $extractor */
         $extractor = new $extractor();
-        $propertyInfo = new PropertyInfo([$extractor], [$extractor]);
+        $propertyInfo = new PropertyInfo(array($extractor), array($extractor));
 
         foreach ($properties as $property) {
             $reflectionProperty = new \ReflectionProperty($class, $property['name']);

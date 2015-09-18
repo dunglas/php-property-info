@@ -9,10 +9,6 @@
 
 namespace PropertyInfo\Tests\NativeExtractors\DataProviders;
 
-use PropertyInfo\Extractors\GetterExtractor;
-use PropertyInfo\Extractors\SetterExtractor;
-use PropertyInfo\Tests\NativeExtractors\Data\Php7Data;
-
 /**
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
@@ -23,20 +19,28 @@ class Php7DataProvider
      */
     public function extractorsDataProvider()
     {
-        $properties = [
-            ['name' => 'bool', 'type' => 'bool', 'class' => null],
-            ['name' => 'int', 'type' => 'int', 'class' => null],
-            ['name' => 'float', 'type' => 'float', 'class' => null],
-            ['name' => 'string', 'type' => 'string', 'class' => null],
-            ['name' => 'array', 'type' => 'array', 'class' => null],
-            ['name' => 'callable', 'type' => 'callable', 'class' => null],
-            ['name' => 'object', 'type' => 'object', 'class' => 'stdClass'],
-        ];
+        $properties = array(
+            array('name' => 'bool', 'type' => 'bool', 'class' => null),
+            array('name' => 'int', 'type' => 'int', 'class' => null),
+            array('name' => 'float', 'type' => 'float', 'class' => null),
+            array('name' => 'string', 'type' => 'string', 'class' => null),
+            array('name' => 'array', 'type' => 'array', 'class' => null),
+            array('name' => 'callable', 'type' => 'callable', 'class' => null),
+            array('name' => 'object', 'type' => 'object', 'class' => 'stdClass'),
+        );
 
-        $cases = [
-            [Php7Data::class, GetterExtractor::class, $properties],
-            [Php7Data::class, SetterExtractor::class, $properties],
-        ];
+        $cases = array(
+            array(
+                'PropertyInfo\Tests\NativeExtractors\Data\Php7Data',
+                'PropertyInfo\Extractors\GetterExtractor',
+                $properties,
+            ),
+            array(
+                'PropertyInfo\Tests\NativeExtractors\Data\Php7Data',
+                'PropertyInfo\Extractors\SetterExtractor',
+                $properties,
+            ),
+        );
 
         return $cases;
     }

@@ -21,7 +21,6 @@ return Symfony\CS\Config\Config::create()
         'header_comment',
         'newline_after_open_tag',
         'ordered_use',
-        'short_array_syntax',
     ))
     ->setUsingCache(true)
     ->finder($finder)

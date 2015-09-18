@@ -9,8 +9,6 @@
 
 namespace PropertyInfo\TypeInfoParsers;
 
-use PropertyInfo\TypeInfoParserInterface;
-
 /**
  *    This abstract supplies a few helper functions for reusable retrieval of reflection data associated with a
  * \ReflectionProperty objects.
@@ -19,7 +17,7 @@ use PropertyInfo\TypeInfoParserInterface;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-abstract class NativeTypeInfoParser implements TypeInfoParserInterface
+class NativeTypeInfoParser
 {
     const GETTER_FORMAT = 'get%s';
     const SETTER_FORMAT = 'set%s';

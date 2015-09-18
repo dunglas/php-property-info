@@ -10,6 +10,7 @@
 namespace PropertyInfo\TypeInfoParsers;
 
 use PropertyInfo\Type;
+use PropertyInfo\TypeInfoParserInterface;
 
 /**
  *     This class will extract type information available to HHVM from Properties, Getters and Setter parameters and it
@@ -23,9 +24,11 @@ use PropertyInfo\Type;
  *
  * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-class HhvmTypeInfoParser extends NativeTypeInfoParser
+class HhvmTypeInfoParser implements TypeInfoParserInterface
 {
-    protected static $types = [
+    const COLLECTION_INTERFACE = 'HH\\Collection';
+
+    protected static $types = array(
         'HH\\bool' => 'bool',
         'HH\\int' => 'int',
         'HH\\float' => 'float',
@@ -33,7 +36,23 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
         'HH\\string' => 'string',
         'callable' => 'callable',
         'array' => 'array',
-    ];
+    );
+
+    /**
+     * @var NativeTypeInfoParser
+     */
+    private $nativeTypeInfoParser;
+
+    /**
+     * @var ContainerTypeInfoParser
+     */
+    private $containerTypeInfoParser;
+
+    public function __construct()
+    {
+        $this->nativeTypeInfoParser = new NativeTypeInfoParser();
+        $this->containerTypeInfoParser = new ContainerTypeInfoParser(static::COLLECTION_INTERFACE, static::$types);
+    }
 
     /**
      * @param \ReflectionProperty $property
@@ -42,7 +61,7 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
      */
     public function getPropertyType(\ReflectionProperty $property)
     {
-        return $property->getTypeText() ?: null;
+        return $property->getTypeText() ? $property->getTypeText() : null;
     }
 
     /**
@@ -52,7 +71,7 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
      */
     public function getGetterReturnType(\ReflectionProperty $property)
     {
-        $getter = $this->getGetter($property);
+        $getter = $this->nativeTypeInfoParser->getGetter($property);
 
         if (null !== $getter) {
             return $getter->getReturnTypeText();
@@ -66,7 +85,7 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
      */
     public function getSetterParamType(\ReflectionProperty $property)
     {
-        $param = $this->getSetterParam($property);
+        $param = $this->nativeTypeInfoParser->getSetterParam($property);
         if (null !== $param) {
             return $param->getTypeText();
         }
@@ -75,86 +94,10 @@ class HhvmTypeInfoParser extends NativeTypeInfoParser
     /**
      * @param string $info
      *
-     * @return array|Type[]
+     * @return array|Type[]|null
      */
     public function parse($info)
     {
-        if ('?' === $info[0]) {
-            $info = substr($info, 1);
-        }
-
-        if (($type = $this->parseSimpleTypes($info)) || ($type = $this->parseContainerTypes($info))) {
-            return [$type];
-        }
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return Type|null
-     */
-    public function parseSimpleTypes($info)
-    {
-        $type = new Type();
-
-        if (isset(static::$types[$info])) {
-            $type->setType(static::$types[$info]);
-            $type->setCollection('array' === $info);
-
-            return $type;
-        }
-
-        if (class_exists($info, true)) {
-            $class = new \ReflectionClass($info);
-            $collection = $class->implementsInterface('HH\\Collection');
-
-            $type->setType('object');
-            $type->setClass($info);
-            $type->setCollection($collection);
-
-            return $type;
-        }
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return Type|null
-     */
-    protected function parseContainerTypes($info)
-    {
-        if (false !== ($pos = strpos($info, '<'))) {
-            $container = substr($info, 0, $pos);
-            $contents = substr($info, $pos + 1, -1);
-            $contents = explode(', ', $contents);
-
-            if ('array' === $container) {
-                $types = $this->parse(end($contents));
-                $type = reset($types);
-                $type->setCollection(true);
-
-                $type->setCollectionType(new Type());
-                $type->getCollectionType()->setType('array');
-                $type->getCollectionType()->setCollection(false);
-
-                return $type;
-            }
-
-            if (class_exists($container, true)) {
-                $types = $this->parse(end($contents));
-                $type = reset($types);
-                $collectionTypes = $this->parse($container);
-                $type->setCollectionType(reset($collectionTypes));
-
-                if ($type->getCollectionType()->isCollection()) {
-                    $type->setCollection(true);
-                    $type->getCollectionType()->setCollection(false);
-                } else {
-                    $type->setCollectionType(null);
-                }
-
-                return $type;
-            }
-        }
+        return $this->containerTypeInfoParser->parse($info);
     }
 }

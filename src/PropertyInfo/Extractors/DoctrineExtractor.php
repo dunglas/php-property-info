@@ -10,9 +10,9 @@
 namespace PropertyInfo\Extractors;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use PropertyInfo\Type;
 use PropertyInfo\TypeExtractorInterface;
+use PropertyInfo\TypeInfoParsers\DoctrineTypeInfoParser;
 
 /**
  * Doctrine ORM and ODM Extractor.
@@ -22,122 +22,24 @@ use PropertyInfo\TypeExtractorInterface;
 class DoctrineExtractor implements TypeExtractorInterface
 {
     /**
-     * @var ClassMetadataFactory
+     * @var DoctrineTypeInfoParser
      */
-    private $classMetadataFactory;
+    protected $typeInfoParser;
 
     public function __construct(ClassMetadataFactory $classMetadataFactory)
     {
-        $this->classMetadataFactory = $classMetadataFactory;
-    }
-
-    public function extractTypes(\ReflectionProperty $reflectionProperty)
-    {
-        $className = $reflectionProperty->getDeclaringClass()->getName();
-
-        try {
-            $metadata = $this->classMetadataFactory->getMetadataFor($className);
-        } catch (MappingException $exception) {
-            return;
-        }
-
-        $type = new Type();
-        $propertyName = $reflectionProperty->getName();
-
-        if ($metadata->hasAssociation($propertyName)) {
-            $class = $metadata->getAssociationTargetClass($propertyName);
-
-            if ($metadata->isSingleValuedAssociation($propertyName)) {
-                $type->setCollection(false);
-                $type->setType('object');
-                $type->setClass($class);
-            } else {
-                $type->setCollection(true);
-                $type->setType('object');
-                $type->setClass('Doctrine\Common\Collections\Collection');
-
-                $collectionType = new Type();
-                $collectionType->setCollection(false);
-                $collectionType->setType('object');
-                $collectionType->setClass($class);
-
-                $type->setCollectionType($collectionType);
-            }
-
-            return [$type];
-        }
-
-        if ($metadata->hasField($propertyName)) {
-            $typeOfField = $metadata->getTypeOfField($propertyName);
-
-            switch ($typeOfField) {
-                case 'date':
-                    // No break
-                case 'datetime':
-                    // No break
-                case 'datetimetz':
-                    // No break
-                case 'time':
-                    $type->setType('object');
-                    $type->setClass('DateTime');
-                    $type->setCollection(false);
-
-                    return [$type];
-
-                case 'array':
-                    // No break
-                case 'simple_array':
-                    // No break
-                case 'json_array':
-                    $type->setType('array');
-                    $type->setCollection(true);
-
-                    return [$type];
-
-                default:
-                    $type->setType($this->getPhpType($typeOfField));
-                    $type->setCollection(false);
-
-                    return [$type];
-            }
-        }
+        $this->typeInfoParser = new DoctrineTypeInfoParser($classMetadataFactory);
     }
 
     /**
-     * Gets the corresponding PHP type.
+     * @param \ReflectionProperty $property
      *
-     * @param string $doctrineType
-     *
-     * @return string
+     * @return Type[]
      */
-    private function getPhpType($doctrineType)
+    public function extractTypes(\ReflectionProperty $property)
     {
-        switch ($doctrineType) {
-            case 'smallint':
-                // No break
-            case 'bigint':
-                // No break
-            case 'integer':
-                return 'int';
+        $typeInfo = $this->typeInfoParser->getPropertyType($property);
 
-            case 'decimal':
-                return 'float';
-
-            case 'text':
-                // No break
-            case 'guid':
-                return 'string';
-
-            case 'boolean':
-                return 'bool';
-
-            case 'blob':
-                // No break
-            case 'binary':
-                return 'resource';
-
-            default:
-                return $doctrineType;
-        }
+        return $this->typeInfoParser->parse($typeInfo);
     }
 }
