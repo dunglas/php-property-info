@@ -10,6 +10,7 @@
 namespace PropertyInfo\Extractors;
 
 use PropertyInfo\PropertyAccessInfoInterface;
+use PropertyInfo\PropertyListRetrieverInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
 
@@ -18,7 +19,7 @@ use PropertyInfo\Type;
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessInfoInterface
+class ReflectionExtractor implements PropertyListRetrieverInterface, PropertyTypeInfoInterface, PropertyAccessInfoInterface
 {
     /**
      * @internal
@@ -38,6 +39,32 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
      * @var array[]
      */
     public static $arrayMutatorPrefixes = array('add', 'remove');
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProperties($class, array $context = array())
+    {
+        try {
+            $reflectionClass = new \ReflectionClass($class);
+        } catch (\ReflectionException $reflectionException) {
+            return;
+        }
+
+        $properties = array();
+        foreach ($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+            $properties[$reflectionProperty->name] = true;
+        }
+
+        foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
+            $propertyName = $this->getPropertyName($reflectionMethod->name);
+            if ($propertyName) {
+                $properties[$propertyName] = true;
+            }
+        }
+
+        return array_keys($properties);
+    }
 
     /**
      * {@inheritdoc}
@@ -289,6 +316,22 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
             } catch (\ReflectionException $reflectionException) {
                 // Try the next prefix if the method doesn't exist
             }
+        }
+    }
+
+    /**
+     * Extracts a property name from a method name.
+     *
+     * @param string $methodName
+     *
+     * @return string
+     */
+    private function getPropertyName($methodName)
+    {
+        $pattern = implode('|', array_merge(self::$accessorPrefixes, self::$mutatorPrefixes));
+
+        if (preg_match('/^('.$pattern.')(.+)$/i', $methodName, $matches)) {
+            return $matches[2];
         }
     }
 }

@@ -27,6 +27,30 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
         $this->extractor = new ReflectionExtractor();
     }
 
+    public function testGetProperties()
+    {
+        $this->assertEquals(
+            array(
+                'bal',
+                'parent',
+                'collection',
+                'foo',
+                'foo2',
+                'foo3',
+                'foo4',
+                'foo5',
+                'files',
+                'A',
+                'B',
+                'C',
+                'D',
+                'E',
+                'F',
+            ),
+            $this->extractor->getProperties('PropertyInfo\Tests\Fixtures\Dummy')
+        );
+    }
+
     /**
      * @dataProvider typesProvider
      */

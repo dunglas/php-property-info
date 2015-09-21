@@ -28,6 +28,7 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~2.7",
+        "symfony/serializer": "~2.7",
         "doctrine/orm": "~2.3",
         "phpdocumentor/reflection": "~1.0"
     },
@@ -35,6 +36,7 @@
         "phpdocumentor/reflection": "<1.0.7"
     },
     "suggest": {
+        "symfony/serializer": "To use Serializer metadata",
         "doctrine/orm": "To use Doctrine metadata",
         "phpdocumentor/reflection": "To use the PHPDoc"
     }

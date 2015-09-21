@@ -11,13 +11,14 @@ namespace PropertyInfo\Tests\Fixtures;
 
 use PropertyInfo\PropertyAccessInfoInterface;
 use PropertyInfo\PropertyDescriptionInfoInterface;
+use PropertyInfo\PropertyListRetrieverInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeInfoInterface, PropertyAccessInfoInterface
+class DummyExtractor implements PropertyListRetrieverInterface, PropertyDescriptionInfoInterface, PropertyTypeInfoInterface, PropertyAccessInfoInterface
 {
     /**
      * {@inheritdoc}
@@ -57,5 +58,13 @@ class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeIn
     public function isWritable($class, $property, array $context = array())
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getProperties($class, array $context = array())
+    {
+        return array('a', 'b');
     }
 }

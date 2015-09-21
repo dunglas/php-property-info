@@ -32,6 +32,23 @@ class DoctrineExtractorTest extends \PHPUnit_Framework_TestCase
         $this->extractor = new DoctrineExtractor($entityManager->getMetadataFactory());
     }
 
+    public function testGetProperties()
+    {
+        $this->assertEquals(
+             array(
+                'id',
+                'guid',
+                'time',
+                'json',
+                'bool',
+                'binary',
+                'foo',
+                'bar',
+            ),
+            $this->extractor->getProperties('PropertyInfo\Tests\Fixtures\DoctrineDummy')
+        );
+    }
+
     /**
      * @dataProvider typesProvider
      */

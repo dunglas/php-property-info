@@ -17,6 +17,10 @@ namespace PropertyInfo;
 class PropertyInfo implements PropertyInfoInterface
 {
     /**
+     * @var PropertyListRetrieverInterface[]
+     */
+    private $listExtractors;
+    /**
      * @var PropertyTypeInfoInterface[]
      */
     private $typeExtractors;
@@ -30,15 +34,18 @@ class PropertyInfo implements PropertyInfoInterface
     private $accessExtractors;
 
     /**
+     * @param PropertyListRetrieverInterface[]   $listExtractors
      * @param TypeExtractorInterface[]           $typeExtractors
      * @param PropertyDescriptionInfoInterface[] $descriptionExtractors
      * @param PropertyAccessInfoInterface[]      $accessExtractors
      */
     public function __construct(
+        array $listExtractors = array(),
         array $typeExtractors = array(),
         array $descriptionExtractors = array(),
         array $accessExtractors = array()
     ) {
+        $this->listExtractors = $listExtractors;
         $this->typeExtractors = $typeExtractors;
         $this->descriptionExtractors = $descriptionExtractors;
         $this->accessExtractors = $accessExtractors;
@@ -47,9 +54,17 @@ class PropertyInfo implements PropertyInfoInterface
     /**
      * {@inheritdoc}
      */
+    public function getProperties($class, array $context = array())
+    {
+        return $this->extract($this->listExtractors, 'getProperties', array($class, $context));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getShortDescription($class, $property, array $context = array())
     {
-        return $this->extract($this->descriptionExtractors, 'getShortDescription', $class, $property, $context);
+        return $this->extract($this->descriptionExtractors, 'getShortDescription', array($class, $property, $context));
     }
 
     /**
@@ -57,7 +72,7 @@ class PropertyInfo implements PropertyInfoInterface
      */
     public function getLongDescription($class, $property, array $context = array())
     {
-        return $this->extract($this->descriptionExtractors, 'getLongDescription', $class, $property, $context);
+        return $this->extract($this->descriptionExtractors, 'getLongDescription', array($class, $property, $context));
     }
 
     /**
@@ -65,7 +80,7 @@ class PropertyInfo implements PropertyInfoInterface
      */
     public function getTypes($class, $property, array $context = array())
     {
-        return $this->extract($this->typeExtractors, 'getTypes', $class, $property, $context);
+        return $this->extract($this->typeExtractors, 'getTypes', array($class, $property, $context));
     }
 
     /**
@@ -73,7 +88,7 @@ class PropertyInfo implements PropertyInfoInterface
      */
     public function isReadable($class, $property, array $context = array())
     {
-        return $this->extract($this->accessExtractors, 'isReadable', $class, $property, $context);
+        return $this->extract($this->accessExtractors, 'isReadable', array($class, $property, $context));
     }
 
     /**
@@ -81,7 +96,7 @@ class PropertyInfo implements PropertyInfoInterface
      */
     public function isWritable($class, $property, array $context = array())
     {
-        return $this->extract($this->accessExtractors, 'isWritable', $class, $property, $context);
+        return $this->extract($this->accessExtractors, 'isWritable', array($class, $property, $context));
     }
 
     /**
@@ -89,16 +104,14 @@ class PropertyInfo implements PropertyInfoInterface
      *
      * @param array  $extractors
      * @param string $method
-     * @param string $class
-     * @param string $property
-     * @param array  $context
+     * @param array  $arguments
      *
      * @return mixed
      */
-    private function extract(array $extractors, $method, $class, $property, array $context)
+    private function extract(array $extractors, $method, array $arguments)
     {
         foreach ($extractors as $extractor) {
-            $value = $extractor->$method($class, $property, $context);
+            $value = call_user_func_array(array($extractor, $method), $arguments);
             if (null !== $value) {
                 return $value;
             }
