@@ -47,7 +47,6 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
             array('f', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'DateTime')))),
         );
     }
-
     /**
      * @dataProvider php7TypesProvider
      */
@@ -68,7 +67,6 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
             array('baz', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_STRING)))),
         );
     }
-
 
     public function testIsReadable()
     {

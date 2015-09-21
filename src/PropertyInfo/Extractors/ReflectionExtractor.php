@@ -46,6 +46,10 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
      */
     public function getTypes($class, $property, array $context = array())
     {
+        if ($fromProperty = $this->extractFromProperty($class, $property)) {
+            return $fromProperty;
+        }
+
         if ($fromMutator = $this->extractFromMutator($class, $property)) {
             return $fromMutator;
         }
@@ -81,6 +85,28 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
         list($reflectionMethod) = $this->getMutatorMethod($class, $property);
 
         return null !== $reflectionMethod;
+    }
+
+    /**
+     * Tries to extract type information from properties.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return Type[]|null
+     */
+    private function extractFromProperty($class, $property)
+    {
+        list($reflectionProperty) = $this->getProperty($class, $property);
+        if (null === $reflectionProperty) {
+            return;
+        }
+
+        if (method_exists($reflectionProperty, 'getTypeText') && $typeText = $reflectionProperty->getTypeText()) {
+            $parser = new TypeTextParser();
+
+            return $parser->parse($typeText);
+        }
     }
 
     /**
@@ -236,6 +262,27 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
     }
 
     /**
+     * Gets the property.
+     *
+     * Returns an array with a the instance of \ReflectionProperty as first item.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return array|null
+     */
+    private function getProperty($class, $property)
+    {
+        try {
+            $reflectionProperty = new \ReflectionProperty($class, $property);
+
+            return array($reflectionProperty);
+        } catch (\ReflectionException $reflectionException) {
+            // Return null if the property doesn't exist
+        }
+    }
+
+    /**
      * Gets the accessor method.
      *
      * Returns an array with a the instance of \ReflectionMethod as first key
@@ -292,17 +339,5 @@ class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessIn
                 // Try the next prefix if the method doesn't exist
             }
         }
-    }
-
-    /**
-     * @param string $typeText
-     *
-     * @return Type
-     */
-    private function parseHackType($typeText)
-    {
-        $parser = new TypeTextParser();
-
-        return $parser->parse($typeText);
     }
 }
