@@ -35,7 +35,7 @@ class PropertyInfo implements PropertyInfoInterface
 
     /**
      * @param PropertyListRetrieverInterface[]   $listExtractors
-     * @param TypeExtractorInterface[]           $typeExtractors
+     * @param PropertyTypeInfoInterface[]        $typeExtractors
      * @param PropertyDescriptionInfoInterface[] $descriptionExtractors
      * @param PropertyAccessInfoInterface[]      $accessExtractors
      */
