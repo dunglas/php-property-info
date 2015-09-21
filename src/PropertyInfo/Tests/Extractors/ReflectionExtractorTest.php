@@ -14,6 +14,7 @@ use PropertyInfo\Type;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
+ * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
 class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
 {
@@ -115,5 +116,57 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'd', array()));
         $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'e', array()));
         $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'f', array()));
+    }
+
+    /**
+     * @dataProvider hackTypesProvider
+     */
+    public function testExtractHackType($property, array $type = null)
+    {
+        if (!method_exists('\ReflectionProperty', 'getTypeText')) {
+            $this->markTestSkipped('Available only with HackLang.');
+        }
+
+        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\HackDummy', $property));
+    }
+
+    public function hackTypesProvider()
+    {
+        return array(
+            array('bool', array(new Type(Type::BUILTIN_TYPE_BOOL))),
+            array('int', array(new Type(Type::BUILTIN_TYPE_INT))),
+            array('float', array(new Type(Type::BUILTIN_TYPE_FLOAT))),
+            array('string', array(new Type(Type::BUILTIN_TYPE_STRING))),
+            array('array', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true))),
+            array('object', array(new Type(Type::BUILTIN_TYPE_OBJECT, false, 'stdClass'))),
+
+            array('boolNullable', array(new Type(Type::BUILTIN_TYPE_BOOL, true))),
+            array('intNullable', array(new Type(Type::BUILTIN_TYPE_INT, true))),
+            array('floatNullable', array(new Type(Type::BUILTIN_TYPE_FLOAT, true))),
+            array('stringNullable', array(new Type(Type::BUILTIN_TYPE_STRING, true))),
+            array('arrayNullable', array(new Type(Type::BUILTIN_TYPE_ARRAY, true, null, true))),
+            array('objectNullable', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'stdClass'))),
+
+            array('boolArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_BOOL)))),
+            array('intArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_INT)))),
+            array('floatArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_FLOAT)))),
+            array('stringArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_STRING)))),
+            array('arrayArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true)))),
+            array('objectArray', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'stdClass')))),
+
+            array('boolArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_BOOL)))),
+            array('intArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_INT)))),
+            array('floatArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_FLOAT)))),
+            array('stringArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_STRING)))),
+            array('arrayArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true)))),
+            array('objectArrayString', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_STRING), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'stdClass')))),
+
+            array('boolNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_BOOL)))),
+            array('intNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_INT)))),
+            array('floatNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_FLOAT)))),
+            array('stringNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_STRING)))),
+            array('arrayNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true)))),
+            array('objectNullableVector', array(new Type(Type::BUILTIN_TYPE_OBJECT, true, 'HH\Vector', true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_OBJECT, false, 'stdClass')))),
+        );
     }
 }

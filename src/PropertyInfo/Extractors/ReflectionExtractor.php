@@ -9,6 +9,7 @@
 
 namespace PropertyInfo\Extractors;
 
+use PropertyInfo\Hack\TypeTextParser;
 use PropertyInfo\PropertyAccessInfoInterface;
 use PropertyInfo\PropertyListRetrieverInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
@@ -18,6 +19,7 @@ use PropertyInfo\Type;
  * Extracts PHP informations using the reflection API.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
+ * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
 class ReflectionExtractor implements PropertyListRetrieverInterface, PropertyTypeInfoInterface, PropertyAccessInfoInterface
 {
@@ -71,6 +73,10 @@ class ReflectionExtractor implements PropertyListRetrieverInterface, PropertyTyp
      */
     public function getTypes($class, $property, array $context = array())
     {
+        if ($fromProperty = $this->extractFromProperty($class, $property)) {
+            return $fromProperty;
+        }
+
         if ($fromMutator = $this->extractFromMutator($class, $property)) {
             return $fromMutator;
         }
@@ -106,6 +112,28 @@ class ReflectionExtractor implements PropertyListRetrieverInterface, PropertyTyp
         list($reflectionMethod) = $this->getMutatorMethod($class, $property);
 
         return null !== $reflectionMethod;
+    }
+
+    /**
+     * Tries to extract type information from properties.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return Type[]|null
+     */
+    private function extractFromProperty($class, $property)
+    {
+        list($reflectionProperty) = $this->getProperty($class, $property);
+        if (null === $reflectionProperty) {
+            return;
+        }
+
+        if (method_exists($reflectionProperty, 'getTypeText') && $typeText = $reflectionProperty->getTypeText()) {
+            $parser = new TypeTextParser();
+
+            return $parser->parse($typeText);
+        }
     }
 
     /**
@@ -258,6 +286,27 @@ class ReflectionExtractor implements PropertyListRetrieverInterface, PropertyTyp
         }
 
         return false;
+    }
+
+    /**
+     * Gets the property.
+     *
+     * Returns an array with a the instance of \ReflectionProperty as first item.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return array|null
+     */
+    private function getProperty($class, $property)
+    {
+        try {
+            $reflectionProperty = new \ReflectionProperty($class, $property);
+
+            return array($reflectionProperty);
+        } catch (\ReflectionException $reflectionException) {
+            // Return null if the property doesn't exist
+        }
     }
 
     /**
