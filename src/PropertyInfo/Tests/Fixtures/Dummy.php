@@ -7,12 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Tests\PhpDocExtractors\Data;
+namespace PropertyInfo\Tests\Fixtures;
+
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class PhpDocDummy extends PhpDocParent
+class Dummy extends ParentDummy
 {
     /**
      * @var string This is bar.
@@ -29,11 +31,30 @@ class PhpDocDummy extends PhpDocParent
      */
     public $bal;
     /**
-     * @var PhpDocParent
+     * @var ParentDummy
      */
     public $parent;
     /**
      * @var \DateTime[]
+     * @Groups({"a", "b"})
      */
     public $collection;
+
+    /**
+     * A.
+     *
+     * @return int
+     */
+    public function getA()
+    {
+    }
+
+    /**
+     * B.
+     *
+     * @param ParentDummy|null $parent
+     */
+    public function setB(ParentDummy $parent = null)
+    {
+    }
 }

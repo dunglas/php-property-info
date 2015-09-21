@@ -10,7 +10,7 @@
         "validator",
         "doctrine"
     ],
-    "homepage": "http://dunglas.fr",
+    "homepage": "https://dunglas.fr",
     "license": "MIT",
     "authors": [
         {
@@ -24,19 +24,20 @@
         }
     },
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "~2.7",
+        "symfony/serializer": "~2.7",
         "doctrine/orm": "~2.3",
         "phpdocumentor/reflection": "~1.0"
     },
     "conflict": {
-        "phpdocumentor/reflection": "<1.0.4"
+        "phpdocumentor/reflection": "<1.0.7"
     },
     "suggest": {
+        "symfony/serializer": "To use Serializer metadata",
         "doctrine/orm": "To use Doctrine metadata",
-        "symfony/validator": "To use Symfony validator metadata",
         "phpdocumentor/reflection": "To use the PHPDoc"
     }
 }

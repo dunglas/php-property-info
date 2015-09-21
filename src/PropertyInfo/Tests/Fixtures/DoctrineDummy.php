@@ -7,10 +7,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Tests\DoctrineExtractors\Data;
+namespace PropertyInfo\Tests\Fixtures;
+
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * @Entity
+ *
+ * @author Kévin Dunglas <dunglas@gmail.com>
  */
 class DoctrineDummy
 {

@@ -149,4 +149,4 @@ Try it yourself using [Melody](http://melody.sensiolabs.org/):
 
 ## Credits
 
-This library has been created by [Kévin Dunglas](http://dunglas.fr).
+This library has been created by [Kévin Dunglas](https://dunglas.fr).

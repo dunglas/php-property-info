@@ -7,12 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace PropertyInfo\Tests\PhpDocExtractors\Data;
+namespace PropertyInfo\Tests\Fixtures;
 
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class PhpDocParent
+class ParentDummy
 {
     /**
      * Short description.
@@ -40,4 +40,32 @@ class PhpDocParent
      * @var \SplFileInfo[]|resource
      */
     public $files;
+
+    /**
+     * @return bool|null
+     */
+    public function isC()
+    {
+    }
+
+    /**
+     * @return bool
+     */
+    public function canD()
+    {
+    }
+
+    /**
+     * @param resource $e
+     */
+    public function addE($e)
+    {
+    }
+
+    /**
+     * @param \DateTime $f
+     */
+    public function removeF(\DateTime $f)
+    {
+    }
 }

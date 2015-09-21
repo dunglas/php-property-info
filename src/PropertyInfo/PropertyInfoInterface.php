@@ -12,34 +12,10 @@ namespace PropertyInfo;
 /**
  * Gets info about PHP class properties.
  *
+ * A convenient interface inheriting all specific info interfaces.
+ *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface PropertyInfoInterface
+interface PropertyInfoInterface extends PropertyTypeInfoInterface, PropertyDescriptionInfoInterface, PropertyAccessInfoInterface, PropertyListRetrieverInterface
 {
-    /**
-     * Gets the short description of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return string|null
-     */
-    public function getShortDescription(\ReflectionProperty $reflectionProperty);
-
-    /**
-     * Gets the short description of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return string|null
-     */
-    public function getLongDescription(\ReflectionProperty $reflectionProperty);
-
-    /**
-     * Gets types of the property.
-     *
-     * @param \ReflectionProperty $reflectionProperty
-     *
-     * @return Type[]|null
-     */
-    public function getTypes(\ReflectionProperty $reflectionProperty);
 }
