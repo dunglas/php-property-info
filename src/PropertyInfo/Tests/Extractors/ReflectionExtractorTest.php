@@ -33,12 +33,9 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
      */
     public function testExtractors($property, array $type = null)
     {
-        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Dummy', $property));
+        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Dummy', $property, array()));
     }
 
-    /**
-     * @return array
-     */
     public function typesProvider()
     {
         return array(
@@ -60,12 +57,9 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Available only with PHP 7 and superior.');
         }
 
-        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Php7Dummy', $property));
+        $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\Php7Dummy', $property, array()));
     }
 
-    /**
-     * @return array
-     */
     public function php7TypesProvider()
     {
         return array(
@@ -73,6 +67,33 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
             array('bar', array(new Type(Type::BUILTIN_TYPE_INT))),
             array('baz', array(new Type(Type::BUILTIN_TYPE_ARRAY, false, null, true, new Type(Type::BUILTIN_TYPE_INT), new Type(Type::BUILTIN_TYPE_STRING)))),
         );
+    }
+
+
+    public function testIsReadable()
+    {
+        $this->assertFalse($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'bar', array()));
+        $this->assertFalse($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'baz', array()));
+        $this->assertTrue($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'parent', array()));
+        $this->assertTrue($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'a', array()));
+        $this->assertFalse($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'b', array()));
+        $this->assertTrue($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'c', array()));
+        $this->assertTrue($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'd', array()));
+        $this->assertFalse($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'e', array()));
+        $this->assertFalse($this->extractor->isReadable('PropertyInfo\Tests\Fixtures\Dummy', 'f', array()));
+    }
+
+    public function testIsWritable()
+    {
+        $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'bar', array()));
+        $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'baz', array()));
+        $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'parent', array()));
+        $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'a', array()));
+        $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'b', array()));
+        $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'c', array()));
+        $this->assertFalse($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'd', array()));
+        $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'e', array()));
+        $this->assertTrue($this->extractor->isWritable('PropertyInfo\Tests\Fixtures\Dummy', 'f', array()));
     }
 
     /**
@@ -87,9 +108,6 @@ class ReflectionExtractorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($type, $this->extractor->getTypes('PropertyInfo\Tests\Fixtures\HackDummy', $property));
     }
 
-    /**
-     * @return array
-     */
     public function hackTypesProvider()
     {
         return array(

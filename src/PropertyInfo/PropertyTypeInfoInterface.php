@@ -19,10 +19,11 @@ interface PropertyTypeInfoInterface
     /**
      * Gets types of a property.
      *
-     * @param string|\ReflectionClass|null $class
-     * @param string|\ReflectionProperty   $property
+     * @param string $class
+     * @param string $property
+     * @param array  $context
      *
      * @return Type[]|null
      */
-    public function getTypes($class, $property);
+    public function getTypes($class, $property, array $context = array());
 }

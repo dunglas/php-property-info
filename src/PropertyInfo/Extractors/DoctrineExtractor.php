@@ -35,7 +35,7 @@ class DoctrineExtractor implements PropertyTypeInfoInterface
     /**
      * {@inheritdoc}
      */
-    public function getTypes($class, $property)
+    public function getTypes($class, $property, array $context = array())
     {
         try {
             $metadata = $this->classMetadataFactory->getMetadataFor($class);

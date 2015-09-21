@@ -12,8 +12,10 @@ namespace PropertyInfo;
 /**
  * Gets info about PHP class properties.
  *
+ * A convenient interface inheriting all specific info interfaces.
+ *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-interface PropertyInfoInterface extends PropertyTypeInfoInterface, PropertyDescriptionInfoInterface
+interface PropertyInfoInterface extends PropertyTypeInfoInterface, PropertyDescriptionInfoInterface, PropertyAccessInfoInterface
 {
 }
