@@ -9,6 +9,7 @@
 
 namespace PropertyInfo\Tests\Fixtures;
 
+use PropertyInfo\PropertyAccessInfoInterface;
 use PropertyInfo\PropertyDescriptionInfoInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
@@ -16,12 +17,12 @@ use PropertyInfo\Type;
 /**
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeInfoInterface
+class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeInfoInterface, PropertyAccessInfoInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getShortDescription($class, $property)
+    public function getShortDescription($class, $property, array $context = array())
     {
         return 'short';
     }
@@ -29,7 +30,7 @@ class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeIn
     /**
      * {@inheritdoc}
      */
-    public function getLongDescription($class, $property)
+    public function getLongDescription($class, $property, array $context = array())
     {
         return 'long';
     }
@@ -37,8 +38,24 @@ class DummyExtractor implements PropertyDescriptionInfoInterface, PropertyTypeIn
     /**
      * {@inheritdoc}
      */
-    public function getTypes($class, $property)
+    public function getTypes($class, $property, array $context = array())
     {
         return array(new Type(Type::BUILTIN_TYPE_INT));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isReadable($class, $property, array $context = array())
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWritable($class, $property, array $context = array())
+    {
+        return true;
     }
 }

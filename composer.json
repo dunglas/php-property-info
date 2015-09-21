@@ -10,7 +10,7 @@
         "validator",
         "doctrine"
     ],
-    "homepage": "http://dunglas.fr",
+    "homepage": "https://dunglas.fr",
     "license": "MIT",
     "authors": [
         {
@@ -27,7 +27,7 @@
         "php": ">=5.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
+        "symfony/phpunit-bridge": "~2.7",
         "doctrine/orm": "~2.3",
         "phpdocumentor/reflection": "~1.0"
     },
@@ -36,7 +36,6 @@
     },
     "suggest": {
         "doctrine/orm": "To use Doctrine metadata",
-        "symfony/validator": "To use Symfony validator metadata",
         "phpdocumentor/reflection": "To use the PHPDoc"
     }
 }

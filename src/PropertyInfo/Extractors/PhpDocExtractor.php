@@ -39,7 +39,7 @@ class PhpDocExtractor implements PropertyDescriptionInfoInterface, PropertyTypeI
     /**
      * {@inheritdoc}
      */
-    public function getShortDescription($class, $property)
+    public function getShortDescription($class, $property, array $context = array())
     {
         list($docBlock) = $this->getDocBlock($class, $property);
         if (!$docBlock) {
@@ -63,7 +63,7 @@ class PhpDocExtractor implements PropertyDescriptionInfoInterface, PropertyTypeI
     /**
      * {@inheritdoc}
      */
-    public function getLongDescription($class, $property)
+    public function getLongDescription($class, $property, array $context = array())
     {
         list($docBlock) = $this->getDocBlock($class, $property);
         if (!$docBlock) {
@@ -78,7 +78,7 @@ class PhpDocExtractor implements PropertyDescriptionInfoInterface, PropertyTypeI
     /**
      * {@inheritdoc}
      */
-    public function getTypes($class, $property)
+    public function getTypes($class, $property, array $context = array())
     {
         list($docBlock, $source, $prefix) = $this->getDocBlock($class, $property);
         if (!$docBlock) {

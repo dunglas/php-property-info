@@ -39,4 +39,4 @@ before_script:
 
 script:
   - if [ "$CS_FIXER" = "run" ]; then php-cs-fixer fix --verbose --dry-run ; fi;
-  - vendor/bin/phpunit
+  - phpunit

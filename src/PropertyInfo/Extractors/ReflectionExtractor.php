@@ -9,28 +9,32 @@
 
 namespace PropertyInfo\Extractors;
 
+use PropertyInfo\PropertyAccessInfoInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
 
 /**
- * Extracts type info using reflection.
- *
- * Supports PHP (including PHP 7) and Hack.
+ * Extracts PHP informations using the reflection API.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
- * @author Mihai Stancu <stancu.t.mihai@gmail.com>
  */
-class ReflectionExtractor implements PropertyTypeInfoInterface
+class ReflectionExtractor implements PropertyTypeInfoInterface, PropertyAccessInfoInterface
 {
     /**
+     * @internal
+     *
      * @var string[]
      */
     public static $mutatorPrefixes = array('add', 'remove', 'set');
     /**
+     * @internal
+     *
      * @var string[]
      */
     public static $accessorPrefixes = array('is', 'can', 'get');
     /**
+     * @internal
+     *
      * @var array[]
      */
     public static $arrayMutatorPrefixes = array('add', 'remove');
@@ -38,60 +42,57 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
     /**
      * {@inheritdoc}
      */
-    public function getTypes($class, $property)
+    public function getTypes($class, $property, array $context = array())
     {
-        if (defined('HHVM_VERSION') && $fromProperty = $this->extractFromProperty($class, $property)) {
-            return $fromProperty;
-        }
-
-        $ucProperty = ucfirst($property);
-
-        if ($fromMutator = $this->extractFromMutator($class, $ucProperty)) {
+        if ($fromMutator = $this->extractFromMutator($class, $property)) {
             return $fromMutator;
         }
 
-        if ($fromAccessor = $this->extractFromAccessor($class, $ucProperty)) {
+        if ($fromAccessor = $this->extractFromAccessor($class, $property)) {
             return $fromAccessor;
         }
     }
 
-    private function extractFromProperty($class, $property)
+    /**
+     * {@inheritdoc}
+     */
+    public function isReadable($class, $property, array $context = array())
     {
-        try {
-            $reflectionProperty = new \ReflectionProperty($class, $property);
-        } catch (\ReflectionException $reflectionException) {
-            return;
+        if ($this->isPublicProperty($class, $property)) {
+            return true;
         }
 
-        if ($typeText = $reflectionProperty->getTypeText()) {
-            return $this->parseHackType($typeText);
+        list($reflectionMethod) = $this->getAccessorMethod($class, $property);
+
+        return null !== $reflectionMethod;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isWritable($class, $property, array $context = array())
+    {
+        if ($this->isPublicProperty($class, $property)) {
+            return true;
         }
+
+        list($reflectionMethod) = $this->getMutatorMethod($class, $property);
+
+        return null !== $reflectionMethod;
     }
 
     /**
      * Tries to extract type information from mutators.
      *
      * @param string $class
-     * @param string $ucProperty
+     * @param string $property
      *
      * @return Type[]|null
      */
-    private function extractFromMutator($class, $ucProperty)
+    private function extractFromMutator($class, $property)
     {
-        foreach (self::$mutatorPrefixes as $prefix) {
-            try {
-                $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
-
-                // Parameter can be optional to allow things like: method(array $foo = null)
-                if ($reflectionMethod->getNumberOfParameters() >= 1) {
-                    break;
-                }
-            } catch (\ReflectionException $reflectionException) {
-                // Try the next prefix if the method doesn't exist
-            }
-        }
-
-        if (!isset($reflectionMethod)) {
+        list($reflectionMethod, $prefix) = $this->getMutatorMethod($class, $property);
+        if (null === $reflectionMethod) {
             return;
         }
 
@@ -166,25 +167,14 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
      * Tries to extract type information from accessors.
      *
      * @param string $class
-     * @param string $ucProperty
+     * @param string $property
      *
      * @return Type[]|null
      */
-    private function extractFromAccessor($class, $ucProperty)
+    private function extractFromAccessor($class, $property)
     {
-        foreach (self::$accessorPrefixes as $prefix) {
-            try {
-                $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
-
-                if (0 === $reflectionMethod->getNumberOfRequiredParameters()) {
-                    break;
-                }
-            } catch (\ReflectionException $reflectionException) {
-                // Try the next prefix if the method doesn't exist
-            }
-        }
-
-        if (!isset($reflectionMethod)) {
+        list($reflectionMethod, $prefix) = $this->getAccessorMethod($class, $property);
+        if (null === $reflectionMethod) {
             return;
         }
 
@@ -198,11 +188,11 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
     }
 
     /**
-     * Extracts from PHP 7 return type.
+     * Extracts data from the PHP 7 reflection type.
      *
      * @param \ReflectionType $reflectionType
      *
-     * @return Type[]
+     * @return Type
      */
     private function extractFromReflectionType(\ReflectionType $reflectionType)
     {
@@ -222,7 +212,83 @@ class ReflectionExtractor implements PropertyTypeInfoInterface
         return $type;
     }
 
-    private function parseHackType()
+    /**
+     * Does the class have the given public property?
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return bool
+     */
+    private function isPublicProperty($class, $property)
     {
+        try {
+            $reflectionProperty = new \ReflectionProperty($class, $property);
+
+            return $reflectionProperty->isPublic();
+        } catch (\ReflectionException $reflectionExcetion) {
+            // Return false if the property doesn't exist
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the accessor method.
+     *
+     * Returns an array with a the instance of \ReflectionMethod as first key
+     * and the prefix of the method as second or null if not found.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return array|null
+     */
+    private function getAccessorMethod($class, $property)
+    {
+        $ucProperty = ucfirst($property);
+
+        foreach (self::$accessorPrefixes as $prefix) {
+            try {
+                $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
+
+                if (0 === $reflectionMethod->getNumberOfRequiredParameters()) {
+                    return array($reflectionMethod, $prefix);
+                }
+            } catch (\ReflectionException $reflectionException) {
+                // Return null if the property doesn't exist
+            }
+        }
+
+        return;
+    }
+
+    /**
+     * Gets the mutator method.
+     *
+     * Returns an array with a the instance of \ReflectionMethod as first key
+     * and the prefix of the method as second or null if not found.
+     *
+     * @param string $class
+     * @param string $property
+     *
+     * @return array
+     */
+    private function getMutatorMethod($class, $property)
+    {
+        $ucProperty = ucfirst($property);
+
+        foreach (self::$mutatorPrefixes as $prefix) {
+            try {
+                $reflectionMethod = new \ReflectionMethod($class, $prefix.$ucProperty);
+
+                // Parameter can be optional to allow things like: method(array $foo = null)
+                if ($reflectionMethod->getNumberOfParameters() >= 1) {
+                    return array($reflectionMethod, $prefix);
+                }
+            } catch (\ReflectionException $reflectionException) {
+                // Try the next prefix if the method doesn't exist
+            }
+        }
     }
 }
