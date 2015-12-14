@@ -1,5 +1,7 @@
 # PHP Property Info
 
+**Deprecated**: This library has been merged into the Symfony Framework. Please use and contribute to the [Symfony PropertyInfo Component](http://symfony.com/blog/new-in-symfony-2-8-propertyinfo-component).
+
 PHP doesn't support explicit type definition. This is annoying, especially when doing meta programming.
 Various libraries including but not limited to Doctrine ORM and the Symfony Validator provide their own type managing
 system.
