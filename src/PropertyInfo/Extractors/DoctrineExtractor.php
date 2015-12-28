@@ -12,6 +12,7 @@ namespace PropertyInfo\Extractors;
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\MappingException as OrmMappingException;
 use PropertyInfo\PropertyListRetrieverInterface;
 use PropertyInfo\PropertyTypeInfoInterface;
 use PropertyInfo\Type;
@@ -42,6 +43,8 @@ class DoctrineExtractor implements PropertyListRetrieverInterface, PropertyTypeI
             $metadata = $this->classMetadataFactory->getMetadataFor($class);
         } catch (MappingException $exception) {
             return;
+        } catch (OrmMappingException $exception) {
+            return;
         }
 
         return array_merge($metadata->getFieldNames(), $metadata->getAssociationNames());
@@ -55,6 +58,8 @@ class DoctrineExtractor implements PropertyListRetrieverInterface, PropertyTypeI
         try {
             $metadata = $this->classMetadataFactory->getMetadataFor($class);
         } catch (MappingException $exception) {
+            return;
+        } catch (OrmMappingException $exception) {
             return;
         }
 
