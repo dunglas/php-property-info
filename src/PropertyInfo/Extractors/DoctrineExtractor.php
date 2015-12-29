@@ -11,6 +11,7 @@ namespace PropertyInfo\Extractors;
 
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\ORM\Mapping\MappingException as OrmMappingException;
 use PropertyInfo\Type;
 use PropertyInfo\TypeExtractorInterface;
 
@@ -38,6 +39,8 @@ class DoctrineExtractor implements TypeExtractorInterface
         try {
             $metadata = $this->classMetadataFactory->getMetadataFor($className);
         } catch (MappingException $exception) {
+            return;
+        } catch (OrmMappingException $exception) {
             return;
         }
 
