@@ -12,6 +12,7 @@ namespace PropertyInfo\Extractors;
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\Mapping\MappingException as OrmMappingException;
+use Doctrine\DBAL\Types\Type as DBALType;
 use PropertyInfo\Type;
 use PropertyInfo\TypeExtractorInterface;
 
@@ -74,31 +75,33 @@ class DoctrineExtractor implements TypeExtractorInterface
             $typeOfField = $metadata->getTypeOfField($propertyName);
 
             switch ($typeOfField) {
-                case 'date':
-                    // No break
-                case 'datetime':
-                    // No break
-                case 'datetimetz':
-                    // No break
-                case 'time':
+                case DBALType::DATE:
+                case DBALType::DATETIME:
+                case DBALType::DATETIMETZ:
+                case 'vardatetime':
+                case DBALType::TIME:
                     $type->setType('object');
                     $type->setClass('DateTime');
                     $type->setCollection(false);
 
                     return [$type];
 
-                case 'array':
-                    // No break
-                case 'simple_array':
-                    // No break
-                case 'json_array':
+                case DBALType::TARRAY:
+                case DBALType::SIMPLE_ARRAY:
+                case DBALType::JSON_ARRAY:
                     $type->setType('array');
                     $type->setCollection(true);
 
                     return [$type];
 
                 default:
-                    $type->setType($this->getPhpType($typeOfField));
+                    $builtinType = $this->getPhpType($typeOfField);
+
+                    if (null === $builtinType) {
+                        return;
+                    }
+
+                    $type->setType($builtinType);
                     $type->setCollection(false);
 
                     return [$type];
@@ -111,36 +114,32 @@ class DoctrineExtractor implements TypeExtractorInterface
      *
      * @param string $doctrineType
      *
-     * @return string
+     * @return string|null
      */
     private function getPhpType($doctrineType)
     {
         switch ($doctrineType) {
-            case 'smallint':
-                // No break
-            case 'bigint':
-                // No break
-            case 'integer':
+            case DBALType::SMALLINT:
+            case DBALType::BIGINT:
+            case DBALType::INTEGER:
                 return 'int';
 
-            case 'decimal':
+            case DBALType::FLOAT:
+            case DBALType::DECIMAL:
                 return 'float';
 
-            case 'text':
-                // No break
-            case 'guid':
+            case DBALType::STRING:
+            case DBALType::TEXT:
+            case DBALType::GUID:
                 return 'string';
 
-            case 'boolean':
+            case DBALType::BOOLEAN:
                 return 'bool';
 
-            case 'blob':
+            case DBALType::BLOB:
                 // No break
             case 'binary':
                 return 'resource';
-
-            default:
-                return $doctrineType;
         }
     }
 }
